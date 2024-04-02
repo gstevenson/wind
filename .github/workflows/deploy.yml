@@ -1,5 +1,5 @@
 name: GitHub pages deployment
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: Deploy app to GitHub pages
 
 # Controls when the workflow will run
 on:
