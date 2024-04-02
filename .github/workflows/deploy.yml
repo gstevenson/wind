@@ -5,24 +5,13 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   # Triggers the workflow on push or pull request events but only for the $default-branch branch
   push:
-    branches: [ $default-branch ]
+    branches: [$default-branch]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [$default-branch]
 
   workflow_dispatch:
 
 jobs:
-
-    build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 21
-      - run: npm ci
-
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
