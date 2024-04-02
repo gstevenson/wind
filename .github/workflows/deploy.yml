@@ -28,4 +28,5 @@ jobs:
     name: Deploy application to GitHub pages
     needs: build
     runs-on: ubuntu-latest
+    steps:
       - run: npm run deploy
