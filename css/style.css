@@ -284,11 +284,10 @@ label {
 
 .controls-container {
     margin: 20px;
-    padding: 0;
 }
 
 .controls-container input[type='number'] {
-    padding: 12px 20px; /* Some padding */
+    padding: 12px 20px;
     margin: 8px 0;
     font-family: 'Roboto', sans-serif;
     font-size: 22px;
@@ -312,27 +311,7 @@ label {
     outline: none; /* Removing the default focus outline */
 }
 
-.number-input,
-.number-input * {
-    box-sizing: border-box;
-}
-
-.number-input button {
-    outline: none;
-    -webkit-appearance: none;
-    background-color: white;
-    border: none;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-    margin: 0;
-    position: relative;
-}
-
 .number-input input[type='number'] {
     padding: 0.5rem;
-    font-size: 2rem;
     font-weight: bold;
-    text-align: center;
 }
