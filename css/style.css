@@ -259,13 +259,15 @@ html {
 
 h1 {
     color: white;
-    padding: 20px;
+    margin: 20px;
 }
 
 canvas {
     /* Your existing canvas styles */
     border: 1px solid #000;
     background-color: white;
+
+    margin: 20px;
 }
 
 p,
