@@ -254,12 +254,7 @@ body,
 html {
     height: 100%;
     margin: 0;
-    display: flex;
     background-color: #202124;
-
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 h1 {
@@ -278,7 +273,7 @@ label {
     color: #c5fffd;
 }
 
-myCanvas {
+.myCanvas {
     width: 100%;
 }
 
