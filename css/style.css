@@ -245,3 +245,31 @@ textarea {
   }
 }
 
+/* Custom */
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #d6cdcd; /* Optional: just to enhance visibility */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+canvas {
+  /* Your existing canvas styles */
+  border: 1px solid #000;
+  background-color: white;
+}
+
+#controls {
+  margin-top: 20px; /* Adds some space between the canvas and the controls */
+}
