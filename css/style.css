@@ -25,12 +25,12 @@ html {
  */
 
 ::-moz-selection {
-    background: #b3d4fc;
+    background: #8d2c5d;
     text-shadow: none;
 }
 
 ::selection {
-    background: #b3d4fc;
+    background: #8d2c5d;
     text-shadow: none;
 }
 
@@ -175,73 +175,6 @@ textarea {
     /* Style adjustments for high resolution devices */
 }
 
-/* ==========================================================================
-   Print styles.
-   Inlined to avoid the additional HTTP request:
-   https://www.phpied.com/delay-loading-your-print-css/
-   ========================================================================== */
-
-@media print {
-    *,
-    *::before,
-    *::after {
-        background: #fff !important;
-        color: #000 !important;
-        /* Black prints faster */
-        box-shadow: none !important;
-        text-shadow: none !important;
-    }
-
-    a,
-    a:visited {
-        text-decoration: underline;
-    }
-
-    a[href]::after {
-        content: ' (' attr(href) ')';
-    }
-
-    abbr[title]::after {
-        content: ' (' attr(title) ')';
-    }
-
-    /*
-   * Don't show links that are fragment identifiers,
-   * or use the `javascript:` pseudo protocol
-   */
-    a[href^='#']::after,
-    a[href^='javascript:']::after {
-        content: '';
-    }
-
-    pre {
-        white-space: pre-wrap !important;
-    }
-
-    pre,
-    blockquote {
-        border: 1px solid #999;
-        page-break-inside: avoid;
-    }
-
-    tr,
-    img {
-        page-break-inside: avoid;
-    }
-
-    p,
-    h2,
-    h3 {
-        orphans: 3;
-        widows: 3;
-    }
-
-    h2,
-    h3 {
-        page-break-after: avoid;
-    }
-}
-
 /* Fonts */
 .roboto-thin {
     font-family: 'Roboto', sans-serif;
@@ -349,22 +282,16 @@ label {
     color: #c5fffd;
 }
 
-#controls {
-    margin: 20px; /* Adds some space between the canvas and the controls */
-}
-
 .controls-container {
     margin: 20px;
     padding: 0;
 }
 
 .controls-container input[type='number'] {
-    width: 100%; /* Full-width */
     padding: 12px 20px; /* Some padding */
     margin: 8px 0;
     font-family: 'Roboto', sans-serif;
     font-size: 22px;
-    display: block; /* Making sure it's block level */
     border: 3px solid gray; /* Gray border */
     border-radius: 4px; /* Rounded borders */
     box-sizing: border-box; /* Making padding not affect width */
@@ -383,4 +310,29 @@ label {
     border-color: #af684c; /* Highlighted border color */
     box-shadow: 0 0 8px 0 rgba(76, 175, 80, 0.2); /* Adding a subtle shadow on focus */
     outline: none; /* Removing the default focus outline */
+}
+
+.number-input,
+.number-input * {
+    box-sizing: border-box;
+}
+
+.number-input button {
+    outline: none;
+    -webkit-appearance: none;
+    background-color: white;
+    border: none;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+}
+
+.number-input input[type='number'] {
+    padding: 0.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
 }

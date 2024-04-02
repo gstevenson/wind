@@ -38,16 +38,20 @@
         <!-- Add your site or application content here -->
         <h1 class="roboto-black">Runway / wind calculations</h1>
 
-        <canvas id="myCanvas" width="500" height="500" style="border: 1px solid #000"> Your browser does not support the canvas element. </canvas>
+        <canvas id="myCanvas" width="600" height="600" style="border: 1px solid #000"> Your browser does not support the canvas element. </canvas>
 
         <div class="controls-container">
             <label for="windInput">Wind Direction</label>
 
-            <button onclick="this.parentNode.querySelector('#some-id').stepUp()"></button
-            ><input type="number" id="windInput" name="windInput" min="0" max="359" value="180" oninput="window.updateWindLine()" />
-            <label for="windInput">Wind Speed</label>
+            <div class="number-input">
+                <input type="number" id="windInput" name="windInput" min="0" max="359" value="180" oninput="window.updateWindLine()" />
+            </div>
 
-            <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" oninput="window.updateWindLine()" />
+            <label for="windSpeed">Wind Speed</label>
+
+            <div class="number-input">
+                <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" oninput="window.updateWindLine()" />
+            </div>
 
             <p id="idealRunway">Ideal runway: <span id="idealRunwayValue"></span></p>
             <p id="headWind"><span id="headWindValue"></span></p>
