@@ -1,9 +1,3 @@
-module.exports = {
-  run: function () {
-    console.log("run from app.js");
-  },
-};
-
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
@@ -129,10 +123,6 @@ function updateWindLine() {
     setupCanvas(); // Clears the canvas and redraws the base elements
     drawWindLine(parseInt(windAngle, 10), 3); // Draws the wind line with the specified number of arrows
   }
-}
-
-function app() {
-  console.log("line 8");
 }
 
 window.updateWindLine = updateWindLine;
