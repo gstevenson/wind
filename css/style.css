@@ -361,7 +361,9 @@ label {
 .controls-container input[type='number'] {
     width: 100%; /* Full-width */
     padding: 12px 20px; /* Some padding */
-    margin: 8px 0; /* Some margin */
+    margin: 8px 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 22px;
     display: block; /* Making sure it's block level */
     border: 3px solid gray; /* Gray border */
     border-radius: 4px; /* Rounded borders */
