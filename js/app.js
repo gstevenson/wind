@@ -125,11 +125,7 @@ function updateWindLine() {
 
 function calcWind(windAngle, windSpeed, runway) {
     var recip
-    console.log('---')
-    console.log(windAngle)
-    console.log(windSpeed)
-    console.log(runway)
-    console.log('---')
+
     if (runway < 180) {
         recip = runway + 180
     } else {
