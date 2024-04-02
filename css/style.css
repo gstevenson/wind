@@ -254,9 +254,8 @@ body,
 html {
     height: 100%;
     margin: 0;
-    background-color: #202124;
-
     display: flex;
+    background-color: #202124;
 
     flex-direction: column;
     align-items: center;
@@ -270,9 +269,8 @@ h1 {
 
 canvas {
     /* Your existing canvas styles */
-    border: 3px solid #000;
+    border: 1px solid #000;
     background-color: white;
-    width
 }
 
 p,
@@ -289,7 +287,6 @@ myCanvas {
 }
 
 .controls-container input[type='number'] {
-    padding: 12px 20px;
     margin: 8px 0;
     font-family: 'Roboto', sans-serif;
     font-size: 22px;
