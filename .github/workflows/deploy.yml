@@ -23,10 +23,10 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
-
-  deploy:
-    name: Deploy application to GitHub pages
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - run: npm run deploy
+
+  # deploy:
+  #   name: Deploy application to GitHub pages
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
