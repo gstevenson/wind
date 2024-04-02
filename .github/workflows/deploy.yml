@@ -24,11 +24,11 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run deploy
-        with:
-          # Token for the repo
-          # Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
+    with:
+      # Token for the repo
+      # Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      branch: gh-pages
 
   # deploy:
   #   name: Deploy application to GitHub pages
