@@ -254,32 +254,34 @@ body,
 html {
     height: 100%;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #202124;
 
     display: flex;
+
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    margin: 0;
 }
 
 h1 {
     color: white;
+    padding: 20px;
 }
 
 canvas {
     /* Your existing canvas styles */
-    border: 1px solid #000;
+    border: 3px solid #000;
     background-color: white;
+    width
 }
 
 p,
 label {
     color: #c5fffd;
+}
+
+myCanvas {
+    width: 100%;
 }
 
 .controls-container {
