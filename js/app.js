@@ -132,8 +132,6 @@ function calcWind(windAngle, windSpeed, runway) {
         recip = runway - 180
     }
 
-    console.log(recip)
-
     var recip_wind
 
     if (windAngle < 180) {
