@@ -264,6 +264,7 @@ html {
 h1 {
     color: white;
     margin: 20px;
+    text-align: center;
 }
 
 canvas {
