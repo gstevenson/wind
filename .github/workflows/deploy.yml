@@ -25,16 +25,10 @@ jobs:
                   registry-url: https://registry.npmjs.org/
             - run: npm ci
             - run: npm run build
-
             - name: Deploy
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./dist
-              permissions:
-                  contents: write
-    # deploy:
-    #   name: Deploy application to GitHub pages
-    #   needs: build
-    #   runs-on: ubuntu-latest
-    #   steps:
+    permissions:
+        contents: write
