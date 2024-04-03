@@ -255,6 +255,10 @@ html {
     height: 100%;
     margin: 0;
     background-color: #202124;
+
+    display: grid; /* Enables CSS Grid */
+    place-items: center; /* Shortcut for aligning and justifying items in the center */
+    min-height: 100vh; /* Full viewport height */
 }
 
 h1 {
@@ -293,6 +297,8 @@ label {
     -webkit-appearance: none; /* Removes default chrome and safari styling */
     -moz-appearance: textfield; /* Removes default Firefox styling */
     transition: border 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+
+    width: 100%;
 }
 
 /* Style for the up and down buttons on number inputs */
