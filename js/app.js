@@ -7,11 +7,12 @@ var ctx = canvas.getContext('2d')
 
 var centerX = canvas.width / 2
 var centerY = canvas.height / 2
-var radius = 50 // Radius of the circle
+var radius = (canvas.width / 2) * 0.6
+
 ctx.beginPath()
 
 function setupCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height) // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // Redraw any static elements here (e.g., the circle or fixed lines)
     ctx.beginPath()
@@ -53,7 +54,7 @@ function drawWindLine(angleDegrees, numberOfArrows) {
     var adjustedAngleDegrees = angleDegrees - 90
     var angleRadians = adjustedAngleDegrees * (Math.PI / 180)
 
-    var lineLength = radius // Length of the line from center
+    var lineLength = radius * 1.5 // Length of the line from center
 
     // Draw the main wind line
     ctx.strokeStyle = 'blue'
