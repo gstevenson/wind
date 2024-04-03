@@ -194,6 +194,10 @@ function reconfigureRunways() {
     var runw = JSON.parse(localStorage.getItem('runways'))
     var newRunways = window.prompt('Enter a comma separated list of runways, using full magnetic heading', runw.join(', '))
 
+    if (newRunways == null || newRunways == '') {
+        return
+    }
+
     var numbersArray = newRunways.split(', ').map(function (item) {
         return parseInt(item, 10)
     })
@@ -206,8 +210,15 @@ function reconfigureRunways() {
     updateWindLine()
 }
 
-if (localStorage.getItem('runways') == null) {
+function reset() {
     console.log('setting up application')
+
+    configureLocalStorage()
+    setupCanvas()
+    updateWindLine()
+}
+
+if (localStorage.getItem('runways') == null) {
     configureLocalStorage()
 }
 
@@ -217,3 +228,5 @@ updateWindLine()
 window.updateWindLine = updateWindLine
 
 window.reconfigureRunways = reconfigureRunways
+
+window.reset = reset
