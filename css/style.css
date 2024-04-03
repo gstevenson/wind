@@ -270,7 +270,7 @@ h1 {
 canvas {
     /* Your existing canvas styles */
     border: 1px solid #000;
-    background-color: white;
+    background-color: #3e7e00;
 
     margin: 20px;
 }
