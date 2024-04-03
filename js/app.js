@@ -163,42 +163,36 @@ function calcWind(windAngle, windSpeed, runway) {
 
     var sigfig = 100
 
-    var parallel_comp = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
+    var headortail_component = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
 
-    var xwind_comp = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
+    var xwind_component = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
 
-    var svgparalleltxt
+    var headOrTail
 
-    var xwind_dir
+    var wind_direction
 
-    if (parallel_comp >= 0) {
-        svgparalleltxt = 'Headwind: '
+    if (headortail_component >= 0) {
+        headOrTail = 'Headwind: '
     } else {
-        svgparalleltxt = 'Tailwind: '
+        headOrTail = 'Tailwind: '
     }
-
-    var xwind_dir_bool /* postitive from RHS, negative from LHS */
 
     if (runway < 180) {
         if (windAngle >= runway && windAngle < recip) {
-            xwind_dir = 'Crosswind from Right: '
-            xwind_dir_bool = -1
+            wind_direction = 'Crosswind from Right: '
         } else {
-            xwind_dir = 'Crosswind from Left: '
-            xwind_dir_bool = 1
+            wind_direction = 'Crosswind from Left: '
         }
     } else {
         if (windAngle >= runway || windAngle < recip) {
-            xwind_dir = 'Crosswind from Right: '
-            xwind_dir_bool = -1
+            wind_direction = 'Crosswind from Right: '
         } else {
-            xwind_dir = 'Crosswind from Left: '
-            xwind_dir_bool = 1
+            wind_direction = 'Crosswind from Left: '
         }
     }
 
-    document.getElementById('headWindValue').textContent = svgparalleltxt + ' ' + parallel_comp + 'kt(s)'
-    document.getElementById('crossWindValue').textContent = xwind_dir + ' ' + xwind_comp + 'kt(s)'
+    document.getElementById('headWindValue').textContent = headOrTail + ' ' + headortail_component + 'kt(s)'
+    document.getElementById('crossWindValue').textContent = wind_direction + ' ' + xwind_component + 'kt(s)'
 }
 
 function findClosest(value) {
