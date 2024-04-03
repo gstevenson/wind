@@ -286,6 +286,7 @@ label {
 
 .controls-container {
     margin: 20px;
+    padding-bottom: 50px;
 }
 
 .controls-container input[type='number'] {
