@@ -12,7 +12,9 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "webpack serve --open --config webpack.config.dev.js",
         "build": "webpack --config webpack.config.prod.js",
-        "deploy": "gh-pages -d dist"
+        "deploy": "gh-pages -d dist",
+        "version": "npm run build && git add -A dist",
+        "postversion": "git push && git push --tags && rm -rf build/temp"
     },
     "devDependencies": {
         "copy-webpack-plugin": "^11.0.0",
