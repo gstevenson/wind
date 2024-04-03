@@ -1,9 +1,6 @@
-name: GitHub pages deployment
-run-name: Deploy app to GitHub pages
+name: Build and deploy on commit
 
-# Controls when the workflow will run
 on:
-    # Triggers the workflow on push or pull request events but only for the main branch
     push:
         branches: [main]
     pull_request:
@@ -13,19 +10,26 @@ on:
 
 jobs:
     build:
-        name: Build application
+        name: Build and deploy application to GitHub pages
         runs-on: ubuntu-latest
+
         steps:
-            - name: Checkout
+            - name: Checkout the code
               uses: actions/checkout@v3
+
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
                   node-version: 21
                   registry-url: https://registry.npmjs.org/
-            - run: npm ci
-            - run: npm run build
-            - name: Deploy
+
+            - name: Clean install npm packages
+              run: npm ci
+
+            - name: Build
+              run: npm run build
+
+            - name: Deploy built application to GitHub pages
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
