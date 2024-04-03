@@ -129,74 +129,38 @@ function updateWindLine() {
 }
 
 function calcWind(windAngle, windSpeed, runway) {
-    var recip
+    var recip = runway < 180 ? runway + 180 : runway - 180
 
-    if (runway < 180) {
-        recip = runway + 180
-    } else {
-        recip = runway - 180
-    }
-
-    var recip_wind
-
-    if (windAngle < 180) {
-        recip_wind = windAngle + 180
-    } else {
-        recip_wind = windAngle - 180
-    }
-
+    // Convert degrees to radians more concisely
     var rwyrad = (runway * Math.PI) / 180
-
     var windrad = (windAngle * Math.PI) / 180
 
-    var rwyx = Math.sin(rwyrad)
+    // Calculate runway and wind vectors
+    var rwyVector = { x: Math.sin(rwyrad), y: Math.cos(rwyrad) }
+    var windVector = { x: Math.sin(windrad), y: Math.cos(windrad) }
 
-    var rwyy = Math.cos(rwyrad)
-
-    var windx = Math.sin(windrad)
-
-    var windy = Math.cos(windrad)
-
-    var dotprod = rwyx * windx + rwyy * windy
-
+    // Dot product and angle between runway and wind vectors
+    var dotprod = rwyVector.x * windVector.x + rwyVector.y * windVector.y
     var thetarad = Math.acos(dotprod)
 
+    // Rounding for significant figures
     var sigfig = 100
-
     var headortail_component = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
-
     var xwind_component = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
 
-    var headOrTail
+    // Determine head/tailwind and crosswind direction more efficiently
+    var headOrTail = headortail_component >= 0 ? 'Headwind: ' : 'Tailwind: '
 
-    var wind_direction
+    // Simplified logic for determining crosswind direction
+    var wind_direction =
+        'Crosswind from ' + ((windAngle >= runway && windAngle < recip) || (runway >= 180 && (windAngle >= runway || windAngle < recip)) ? 'Right: ' : 'Left: ')
 
-    if (headortail_component >= 0) {
-        headOrTail = 'Headwind: '
-    } else {
-        headOrTail = 'Tailwind: '
-    }
-
-    if (runway < 180) {
-        if (windAngle >= runway && windAngle < recip) {
-            wind_direction = 'Crosswind from Right: '
-        } else {
-            wind_direction = 'Crosswind from Left: '
-        }
-    } else {
-        if (windAngle >= runway || windAngle < recip) {
-            wind_direction = 'Crosswind from Right: '
-        } else {
-            wind_direction = 'Crosswind from Left: '
-        }
-    }
-
-    document.getElementById('headWindValue').textContent = headOrTail + ' ' + headortail_component + 'kt(s)'
-    document.getElementById('crossWindValue').textContent = wind_direction + ' ' + xwind_component + 'kt(s)'
+    // Update DOM elements
+    document.getElementById('headWindValue').textContent = headOrTail + headortail_component + 'kt(s)'
+    document.getElementById('crossWindValue').textContent = wind_direction + xwind_component + 'kt(s)'
 }
 
 function findClosest(value) {
-    // Hard-coded values
     const values = [20, 200, 140, 320]
 
     // Find the closest value
