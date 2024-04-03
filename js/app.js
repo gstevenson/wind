@@ -7,25 +7,28 @@ var ctx = canvas.getContext('2d')
 
 var centerX = canvas.width / 2
 var centerY = canvas.height / 2
-var radius = (canvas.width / 2) * 0.6
+var radius = (canvas.width / 2) * 0.8
+
+var runways = [20, 200, 140, 320]
 
 ctx.beginPath()
 
 function setupCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Redraw any static elements here (e.g., the circle or fixed lines)
+    // Setup for the circle
     ctx.beginPath()
-    ctx.strokeStyle = 'black'
-    ctx.lineWidth = 1
+    ctx.strokeStyle = '#99005b'
+    ctx.lineWidth = 6
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
+    ctx.fillStyle = '#c5c6d0'
+    ctx.fill()
     ctx.stroke()
 
-    // Example: Redraw fixed runway lines
-    drawRunwayLine(20)
-    drawRunwayLine(200)
-    drawRunwayLine(140)
-    drawRunwayLine(320)
+    // Draw the fixed runway lines
+    runways.forEach(function (angle) {
+        drawRunwayLine(angle)
+    })
 }
 
 function drawArrowhead(ctx, x, y, radians) {
@@ -84,7 +87,7 @@ function drawRunwayLine(angleDegrees) {
     var angleRadians = adjustedAngleDegrees * (Math.PI / 180)
 
     // Calculate start and end points for the line
-    var lineLength = Math.sqrt(2) * radius
+    var lineLength = Math.sqrt(2) * radius * 0.5
     var startX = centerX - lineLength * Math.cos(angleRadians)
     var startY = centerY - lineLength * Math.sin(angleRadians)
     var endX = centerX + lineLength * Math.cos(angleRadians)
@@ -161,10 +164,8 @@ function calcWind(windAngle, windSpeed, runway) {
 }
 
 function findClosest(value) {
-    const values = [20, 200, 140, 320]
-
     // Find the closest value
-    return values.reduce((closest, current) => {
+    return runways.reduce((closest, current) => {
         // Calculate the absolute difference
         const diffClosest = Math.abs(closest - value)
         const diffCurrent = Math.abs(current - value)
