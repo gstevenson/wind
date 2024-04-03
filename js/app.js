@@ -9,7 +9,7 @@ var centerX = canvas.width / 2
 var centerY = canvas.height / 2
 var radius = (canvas.width / 2) * 0.8
 
-var runways = [20, 200, 140, 320]
+var runways = JSON.parse(localStorage.getItem('runways'))
 
 ctx.beginPath()
 
@@ -184,8 +184,36 @@ function angleToRunwayNumber(angleDegrees) {
     return runwayNumber.toString().padStart(2, '0') // Ensure it's a two-digit string
 }
 
+function configureLocalStorage() {
+    runways = [20, 200, 140, 320]
+
+    localStorage.setItem('runways', JSON.stringify(runways))
+}
+
+function reconfigureRunways() {
+    var runw = JSON.parse(localStorage.getItem('runways'))
+    var newRunways = window.prompt('Enter a comma separated list of runways, using full magnetic heading', runw.join(', '))
+
+    var numbersArray = newRunways.split(', ').map(function (item) {
+        return parseInt(item, 10)
+    })
+
+    runways = numbersArray
+
+    localStorage.setItem('runways', JSON.stringify(runways))
+
+    setupCanvas()
+    updateWindLine()
+}
+
+if (localStorage.getItem('runways') == null) {
+    console.log('setting up application')
+    configureLocalStorage()
+}
+
 setupCanvas()
 updateWindLine()
 
 window.updateWindLine = updateWindLine
-window.calcWind = calcWind
+
+window.reconfigureRunways = reconfigureRunways
