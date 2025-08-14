@@ -12,6 +12,8 @@ jobs:
     build:
         name: Build and deploy application to GitHub pages
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
 
         steps:
             - name: Checkout the code
@@ -30,9 +32,8 @@ jobs:
               run: npm run build
 
             - name: Deploy built application to GitHub pages
+              if: github.event_name == 'push'
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./dist
-        permissions:
-            contents: write
