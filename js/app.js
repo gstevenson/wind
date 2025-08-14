@@ -44,15 +44,6 @@ function drawArrowhead(ctx, x, y, radians) {
     ctx.fill()
 }
 
-function angleToRunwayNumber(angleDegrees) {
-    let runwayNumber = Math.round(angleDegrees / 10) // Divide by 10 and round to get the basic number
-    if (runwayNumber >= 100) {
-        // If the runway number is 100 or more, modulo by 100 to keep it within two digits
-        runwayNumber = runwayNumber % 100
-    }
-    return runwayNumber.toString().padStart(2, '0') // Ensure it's a two-digit string
-}
-
 function drawWindLine(angleDegrees, numberOfArrows) {
     var adjustedAngleDegrees = angleDegrees - 90
     var angleRadians = adjustedAngleDegrees * (Math.PI / 180)
@@ -191,8 +182,13 @@ function configureLocalStorage() {
 }
 
 function reconfigureRunways() {
-    var runw = JSON.parse(localStorage.getItem('runways'))
-    var newRunways = window.prompt('Enter a comma separated list of runways, using full magnetic heading', runw.join(', '))
+    let runw
+    try {
+        runw = JSON.parse(localStorage.getItem('runways'))
+    } catch (e) {
+        runw = [20, 200, 140, 320]
+    }
+    const newRunways = window.prompt('Enter a comma separated list of runways, using full magnetic heading', runw.join(', '))
 
     if (newRunways == null || newRunways == '') {
         return
@@ -219,11 +215,11 @@ function reset() {
 }
 
 if (localStorage.getItem('runways') == null) {
-    configureLocalStorage()
+    reset()
+} else {
+    setupCanvas()
+    updateWindLine()
 }
-
-setupCanvas()
-updateWindLine()
 
 window.updateWindLine = updateWindLine
 
