@@ -158,13 +158,14 @@ function configureLocalStorage() {
 }
 
 function reconfigureRunways() {
-    const newRunways = window.prompt('Enter a comma separated list of runways, using full magnetic heading', runways.join(', '))
+    const currentNumbers = runways.map((r) => angleToRunwayNumber(r)).join(', ')
+    const newRunways = window.prompt('Enter a comma separated list of runway numbers (e.g. 09, 27)', currentNumbers)
 
     if (newRunways === null || newRunways === '') {
         return
     }
 
-    runways = newRunways.split(', ').map((item) => parseInt(item, 10))
+    runways = newRunways.split(', ').map((item) => parseInt(item, 10) * 10)
     localStorage.setItem('runways', JSON.stringify(runways))
 
     updateWindLine()
