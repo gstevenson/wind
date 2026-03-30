@@ -154,16 +154,87 @@ function drawRunwayLine(angleDegrees, isHighlighted = false) {
     ctx.fillText(angleToRunwayNumber(angleDegrees), textX, textY)
 }
 
+// --- Wind particle animation ---
+const PARTICLE_COUNT = 40
+let particles = []
+let animFrameId = null
+let animState = { windAngle: null, windSpeed: null, closest: null }
+
+function initParticles() {
+    particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+        along: (Math.random() * 2 - 1) * radius,
+        across: (Math.random() * 2 - 1) * radius,
+        speed: 1.2 + Math.random() * 1.6,
+        trailLen: 8 + Math.random() * 14,
+        alpha: 0.15 + Math.random() * 0.3,
+    }))
+}
+
+function drawParticles() {
+    const { windAngle, windSpeed } = animState
+    const moveRad = degreesToRadians((windAngle + 180) % 360, -90)
+    const dx = Math.cos(moveRad)
+    const dy = Math.sin(moveRad)
+    const perpX = -dy
+    const perpY = dx
+    const speedScale = Math.max(0.5, windSpeed / 12)
+
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI)
+    ctx.clip()
+    ctx.lineCap = 'round'
+
+    for (const p of particles) {
+        p.along += p.speed * speedScale
+
+        if (p.along - p.trailLen > radius) {
+            p.along = -radius - p.trailLen
+            p.across = (Math.random() * 2 - 1) * radius
+        }
+
+        const headX = centerX + p.along * dx + p.across * perpX
+        const headY = centerY + p.along * dy + p.across * perpY
+        const tailX = headX - p.trailLen * dx
+        const tailY = headY - p.trailLen * dy
+
+        ctx.beginPath()
+        ctx.strokeStyle = `rgba(180, 215, 245, ${p.alpha})`
+        ctx.lineWidth = 1.5
+        ctx.moveTo(tailX, tailY)
+        ctx.lineTo(headX, headY)
+        ctx.stroke()
+    }
+
+    ctx.restore()
+}
+
+function animateFrame() {
+    setupCanvas(animState.closest)
+    drawParticles()
+    drawWindLine(animState.windAngle)
+    animFrameId = requestAnimationFrame(animateFrame)
+}
+
 function updateWindLine() {
     const windAngle = windInputEl.value
     const windSpeed = windSpeedEl.value
 
     if (windAngle !== '' && windSpeed !== '') {
         const closest = findClosest(runways, windAngle)
-        setupCanvas(closest)
-        drawWindLine(parseInt(windAngle, 10))
+        animState = { windAngle: parseInt(windAngle, 10), windSpeed: parseFloat(windSpeed), closest }
+
+        if (animFrameId === null) {
+            initParticles()
+            animFrameId = requestAnimationFrame(animateFrame)
+        }
+
         idealRunwayValueEl.textContent = angleToRunwayNumber(closest)
         calcWind(windAngle, windSpeed, closest)
+    } else {
+        cancelAnimationFrame(animFrameId)
+        animFrameId = null
+        setupCanvas()
     }
 }
 
