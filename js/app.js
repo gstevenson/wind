@@ -21,7 +21,7 @@ function setupCanvas() {
     ctx.fill()
     ctx.stroke()
 
-    runways.forEach(angle => drawRunwayLine(angle))
+    runways.forEach((angle) => drawRunwayLine(angle))
 }
 
 function drawArrowhead(ctx, x, y, radians) {
@@ -133,9 +133,7 @@ function calcWind(windAngle, windSpeed, runway) {
 }
 
 function findClosest(value) {
-    return runways.reduce((closest, current) =>
-        Math.abs(current - value) < Math.abs(closest - value) ? current : closest
-    )
+    return runways.reduce((closest, current) => (Math.abs(current - value) < Math.abs(closest - value) ? current : closest))
 }
 
 function configureLocalStorage() {
@@ -150,7 +148,7 @@ function reconfigureRunways() {
         return
     }
 
-    runways = newRunways.split(', ').map(item => parseInt(item, 10))
+    runways = newRunways.split(', ').map((item) => parseInt(item, 10))
     localStorage.setItem('runways', JSON.stringify(runways))
 
     setupCanvas()
