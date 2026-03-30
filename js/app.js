@@ -96,11 +96,20 @@ function drawRunwayLine(angleDegrees, isHighlighted = false) {
     const endX = centerX + lineLength * Math.cos(angleRadians)
     const endY = centerY + lineLength * Math.sin(angleRadians)
 
-    // Glow behind highlighted runway
     if (isHighlighted) {
+        // Soft outer glow
         ctx.beginPath()
-        ctx.strokeStyle = 'rgba(79, 195, 247, 0.2)'
-        ctx.lineWidth = 20
+        ctx.strokeStyle = 'rgba(79, 195, 247, 0.25)'
+        ctx.lineWidth = 28
+        ctx.lineCap = 'butt'
+        ctx.moveTo(startX, startY)
+        ctx.lineTo(endX, endY)
+        ctx.stroke()
+
+        // Solid cyan border (visible edge either side of the asphalt)
+        ctx.beginPath()
+        ctx.strokeStyle = '#4fc3f7'
+        ctx.lineWidth = 16
         ctx.lineCap = 'butt'
         ctx.moveTo(startX, startY)
         ctx.lineTo(endX, endY)
@@ -109,7 +118,7 @@ function drawRunwayLine(angleDegrees, isHighlighted = false) {
 
     // Asphalt surface
     ctx.beginPath()
-    ctx.strokeStyle = isHighlighted ? '#1a3a4a' : '#3a3f52'
+    ctx.strokeStyle = isHighlighted ? '#0e2030' : '#3a3f52'
     ctx.lineWidth = 10
     ctx.lineCap = 'butt'
     ctx.moveTo(startX, startY)
