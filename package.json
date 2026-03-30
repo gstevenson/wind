@@ -1,13 +1,20 @@
 {
     "name": "runway-wind-calculations",
     "version": "3.2.0",
-    "description": "",
+    "description": "Browser-based aviation tool for visualising wind conditions and calculating headwind/crosswind components",
     "private": true,
     "keywords": [
-        ""
+        "aviation",
+        "runway",
+        "wind",
+        "crosswind",
+        "headwind"
     ],
-    "license": "",
-    "author": "",
+    "license": "MIT",
+    "author": "Greg",
+    "engines": {
+        "node": ">=22"
+    },
     "scripts": {
         "test": "vitest run",
         "start": "webpack serve --open --config webpack.config.dev.js",
@@ -21,8 +28,5 @@
         "webpack-cli": "^5.1.4",
         "webpack-dev-server": "^4.15.1",
         "webpack-merge": "^5.9.0"
-    },
-    "dependencies": {
-        "nice-forms.css": "^0.1.7"
     }
 }
