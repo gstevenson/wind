@@ -1,4 +1,4 @@
-import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents } from './wind-calc.js'
+import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
 
 const canvas = document.getElementById('myCanvas')
 
@@ -165,7 +165,7 @@ function reconfigureRunways() {
         return
     }
 
-    runways = newRunways.split(', ').map((item) => parseInt(item, 10) * 10)
+    runways = parseRunwayInput(newRunways)
     localStorage.setItem('runways', JSON.stringify(runways))
 
     updateWindLine()

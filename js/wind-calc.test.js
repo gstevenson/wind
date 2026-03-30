@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { angleToRunwayNumber, findClosest, calcWindComponents } from './wind-calc.js'
+import { angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
 
 describe('angleToRunwayNumber', () => {
     it('converts cardinal headings', () => {
@@ -75,5 +75,23 @@ describe('calcWindComponents', () => {
         const light = calcWindComponents(90, 10, 360)
         const strong = calcWindComponents(90, 20, 360)
         expect(strong.crosswindComponent).toBeCloseTo(light.crosswindComponent * 2, 1)
+    })
+})
+
+describe('parseRunwayInput', () => {
+    it('handles space after comma', () => {
+        expect(parseRunwayInput('09, 27')).toEqual([90, 270])
+    })
+
+    it('handles no space after comma', () => {
+        expect(parseRunwayInput('09,27')).toEqual([90, 270])
+    })
+
+    it('handles multiple runways with consistent spacing', () => {
+        expect(parseRunwayInput('09,27,14,32')).toEqual([90, 270, 140, 320])
+    })
+
+    it('handles multiple runways with mixed spacing', () => {
+        expect(parseRunwayInput('09, 27, 14,32')).toEqual([90, 270, 140, 320])
     })
 })

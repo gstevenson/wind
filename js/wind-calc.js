@@ -12,6 +12,10 @@ export function angleToRunwayNumber(angleDegrees) {
     return runwayNumber.toString().padStart(2, '0')
 }
 
+export function parseRunwayInput(input) {
+    return input.split(/,\s*/).map((item) => parseInt(item, 10) * 10)
+}
+
 export function findClosest(runways, value) {
     return runways.reduce((closest, current) => (Math.abs(current - value) < Math.abs(closest - value) ? current : closest))
 }
