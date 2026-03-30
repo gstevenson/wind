@@ -140,8 +140,15 @@ function drawRunwayLine(angleDegrees, isHighlighted = false) {
     const textX = endX + textPadding * Math.cos(angleRadians - Math.PI / 2)
     const textY = endY + textPadding * Math.sin(angleRadians - Math.PI / 2)
 
-    ctx.fillStyle = isHighlighted ? '#4fc3f7' : '#c8ccd8'
-    ctx.font = isHighlighted ? 'bold 16px Arial' : 'bold 14px Arial'
+    if (isHighlighted) {
+        ctx.beginPath()
+        ctx.arc(textX, textY, 14, 0, 2 * Math.PI)
+        ctx.fillStyle = '#4fc3f7'
+        ctx.fill()
+    }
+
+    ctx.fillStyle = isHighlighted ? '#0a1520' : '#c8ccd8'
+    ctx.font = isHighlighted ? 'bold 14px Arial' : 'bold 14px Arial'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.fillText(angleToRunwayNumber(angleDegrees), textX, textY)
