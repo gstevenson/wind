@@ -20,7 +20,7 @@ const crossWindValueEl = document.getElementById('crossWindValue')
 
 let runways = JSON.parse(localStorage.getItem('runways'))
 
-function setupCanvas() {
+function setupCanvas(highlightedRunway = null) {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // Rose background
@@ -56,9 +56,8 @@ function setupCanvas() {
         ctx.fillText(label, centerX + r * Math.cos(angleRad), centerY + r * Math.sin(angleRad))
     })
 
-    runways.forEach((angle) => drawRunwayLine(angle))
+    runways.forEach((angle) => drawRunwayLine(angle, angle === highlightedRunway))
 }
-
 
 function drawWindLine(angleDegrees) {
     const angleRadians = degreesToRadians(angleDegrees, -90)
@@ -88,7 +87,7 @@ function drawWindLine(angleDegrees) {
     ctx.restore()
 }
 
-function drawRunwayLine(angleDegrees) {
+function drawRunwayLine(angleDegrees, isHighlighted = false) {
     const angleRadians = degreesToRadians(angleDegrees, -270)
     const lineLength = Math.sqrt(2) * radius * 0.5
 
@@ -97,9 +96,20 @@ function drawRunwayLine(angleDegrees) {
     const endX = centerX + lineLength * Math.cos(angleRadians)
     const endY = centerY + lineLength * Math.sin(angleRadians)
 
+    // Glow behind highlighted runway
+    if (isHighlighted) {
+        ctx.beginPath()
+        ctx.strokeStyle = 'rgba(79, 195, 247, 0.2)'
+        ctx.lineWidth = 20
+        ctx.lineCap = 'butt'
+        ctx.moveTo(startX, startY)
+        ctx.lineTo(endX, endY)
+        ctx.stroke()
+    }
+
     // Asphalt surface
     ctx.beginPath()
-    ctx.strokeStyle = '#3a3f52'
+    ctx.strokeStyle = isHighlighted ? '#1a3a4a' : '#3a3f52'
     ctx.lineWidth = 10
     ctx.lineCap = 'butt'
     ctx.moveTo(startX, startY)
@@ -108,7 +118,7 @@ function drawRunwayLine(angleDegrees) {
 
     // Dashed centreline
     ctx.beginPath()
-    ctx.strokeStyle = '#c8ccd8'
+    ctx.strokeStyle = isHighlighted ? '#4fc3f7' : '#c8ccd8'
     ctx.lineWidth = 1.5
     ctx.lineCap = 'round'
     ctx.setLineDash([8, 6])
@@ -121,8 +131,8 @@ function drawRunwayLine(angleDegrees) {
     const textX = endX + textPadding * Math.cos(angleRadians - Math.PI / 2)
     const textY = endY + textPadding * Math.sin(angleRadians - Math.PI / 2)
 
-    ctx.fillStyle = '#c8ccd8'
-    ctx.font = 'bold 14px Arial'
+    ctx.fillStyle = isHighlighted ? '#4fc3f7' : '#c8ccd8'
+    ctx.font = isHighlighted ? 'bold 16px Arial' : 'bold 14px Arial'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.fillText(angleToRunwayNumber(angleDegrees), textX, textY)
@@ -133,10 +143,9 @@ function updateWindLine() {
     const windSpeed = windSpeedEl.value
 
     if (windAngle !== '' && windSpeed !== '') {
-        setupCanvas()
-        drawWindLine(parseInt(windAngle, 10))
-
         const closest = findClosest(runways, windAngle)
+        setupCanvas(closest)
+        drawWindLine(parseInt(windAngle, 10))
         idealRunwayValueEl.textContent = angleToRunwayNumber(closest)
         calcWind(windAngle, windSpeed, closest)
     }
