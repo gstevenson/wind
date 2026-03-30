@@ -1,3 +1,5 @@
+import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents } from './wind-calc.js'
+
 const canvas = document.getElementById('myCanvas')
 
 canvas.width = Math.min(window.innerWidth - 32, 560)
@@ -9,8 +11,6 @@ const centerX = canvas.width / 2
 const centerY = canvas.height / 2
 const radius = (canvas.width / 2) * 0.8
 
-const DEG_TO_RAD = Math.PI / 180
-
 // Cached DOM references
 const windInputEl = document.getElementById('windInput')
 const windSpeedEl = document.getElementById('windSpeed')
@@ -19,10 +19,6 @@ const headWindValueEl = document.getElementById('headWindValue')
 const crossWindValueEl = document.getElementById('crossWindValue')
 
 let runways = JSON.parse(localStorage.getItem('runways'))
-
-function degreesToRadians(degrees, offset = 0) {
-    return (degrees + offset) * DEG_TO_RAD
-}
 
 function setupCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -63,14 +59,6 @@ function setupCanvas() {
     runways.forEach((angle) => drawRunwayLine(angle))
 }
 
-
-function angleToRunwayNumber(angleDegrees) {
-    let runwayNumber = Math.round(angleDegrees / 10)
-    if (runwayNumber >= 100) {
-        runwayNumber = runwayNumber % 100
-    }
-    return runwayNumber.toString().padStart(2, '0')
-}
 
 function drawWindLine(angleDegrees) {
     const angleRadians = degreesToRadians(angleDegrees, -90)
@@ -148,37 +136,20 @@ function updateWindLine() {
         setupCanvas()
         drawWindLine(parseInt(windAngle, 10))
 
-        const closest = findClosest(windAngle)
+        const closest = findClosest(runways, windAngle)
         idealRunwayValueEl.textContent = angleToRunwayNumber(closest)
         calcWind(windAngle, windSpeed, closest)
     }
 }
 
 function calcWind(windAngle, windSpeed, runway) {
-    const recip = runway < 180 ? runway + 180 : runway - 180
-    const rwyrad = runway * DEG_TO_RAD
-    const windrad = windAngle * DEG_TO_RAD
-
-    const rwyVector = { x: Math.sin(rwyrad), y: Math.cos(rwyrad) }
-    const windVector = { x: Math.sin(windrad), y: Math.cos(windrad) }
-
-    const dotprod = rwyVector.x * windVector.x + rwyVector.y * windVector.y
-    const thetarad = Math.acos(dotprod)
-
-    const sigfig = 100
-    const headTailComponent = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
-    const crosswindComponent = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
-
-    const headOrTail = headTailComponent >= 0 ? 'Headwind: ' : 'Tailwind: '
-    const crosswindSide =
-        'Crosswind from ' + ((windAngle >= runway && windAngle < recip) || (runway >= 180 && (windAngle >= runway || windAngle < recip)) ? 'Right: ' : 'Left: ')
-
-    headWindValueEl.textContent = headOrTail + headTailComponent + 'kt(s)'
-    crossWindValueEl.textContent = crosswindSide + crosswindComponent + 'kt(s)'
-}
-
-function findClosest(value) {
-    return runways.reduce((closest, current) => (Math.abs(current - value) < Math.abs(closest - value) ? current : closest))
+    const { headTailComponent, crosswindComponent, isHeadwind, crosswindFromRight } = calcWindComponents(
+        parseInt(windAngle, 10),
+        parseFloat(windSpeed),
+        runway
+    )
+    headWindValueEl.textContent = (isHeadwind ? 'Headwind: ' : 'Tailwind: ') + headTailComponent + 'kt(s)'
+    crossWindValueEl.textContent = 'Crosswind from ' + (crosswindFromRight ? 'Right: ' : 'Left: ') + crosswindComponent + 'kt(s)'
 }
 
 function configureLocalStorage() {
