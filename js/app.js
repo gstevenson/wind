@@ -136,19 +136,19 @@ function drawRunwayLine(angleDegrees, isHighlighted = false) {
     ctx.stroke()
     ctx.setLineDash([])
 
-    const textPadding = 18
+    const textPadding = isHighlighted ? 28 : 18
     const textX = endX + textPadding * Math.cos(angleRadians - Math.PI / 2)
     const textY = endY + textPadding * Math.sin(angleRadians - Math.PI / 2)
 
     if (isHighlighted) {
         ctx.beginPath()
-        ctx.arc(textX, textY, 14, 0, 2 * Math.PI)
+        ctx.arc(textX, textY, 16, 0, 2 * Math.PI)
         ctx.fillStyle = '#4fc3f7'
         ctx.fill()
     }
 
     ctx.fillStyle = isHighlighted ? '#0a1520' : '#c8ccd8'
-    ctx.font = isHighlighted ? 'bold 14px Arial' : 'bold 14px Arial'
+    ctx.font = isHighlighted ? 'bold 16px Arial' : 'bold 14px Arial'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.fillText(angleToRunwayNumber(angleDegrees), textX, textY)
