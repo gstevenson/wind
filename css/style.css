@@ -354,6 +354,40 @@ label {
     outline: none;
 }
 
+/* Stepper layout */
+.number-input.stepper {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.number-input.stepper input {
+    flex: 1;
+    min-width: 0;
+}
+
+.btn-stepper {
+    flex-shrink: 0;
+    width: 56px;
+    background: #1c2333;
+    border: 2px solid #2e3f58;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 300;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.btn-stepper:active {
+    background: #2e3f58;
+}
+
 /* Buttons */
 .action-buttons {
     display: flex;

@@ -47,14 +47,18 @@
             <div class="controls-container">
                 <label for="windInput">Wind Direction</label>
 
-                <div class="number-input">
+                <div class="number-input stepper">
+                    <button class="btn-stepper" onclick="window.adjustWindDirection(-10)">−</button>
                     <input type="number" id="windInput" name="windInput" min="0" max="359" value="180" inputmode="numeric" oninput="window.updateWindLine()" />
+                    <button class="btn-stepper" onclick="window.adjustWindDirection(10)">+</button>
                 </div>
 
                 <label for="windSpeed">Wind Speed</label>
 
-                <div class="number-input">
+                <div class="number-input stepper">
+                    <button class="btn-stepper" onclick="window.adjustWindSpeed(-1)">−</button>
                     <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" inputmode="numeric" oninput="window.updateWindLine()" />
+                    <button class="btn-stepper" onclick="window.adjustWindSpeed(1)">+</button>
                 </div>
 
                 <p id="idealRunway">Ideal runway: <span id="idealRunwayValue"></span></p>

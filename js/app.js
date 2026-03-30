@@ -319,6 +319,20 @@ function reset() {
     updateWindLine()
 }
 
+function adjustWindDirection(delta) {
+    let val = (parseInt(windInputEl.value, 10) || 0) + delta
+    if (val < 0) val += 360
+    if (val >= 360) val -= 360
+    windInputEl.value = val
+    updateWindLine()
+}
+
+function adjustWindSpeed(delta) {
+    const val = Math.max(0, (parseFloat(windSpeedEl.value) || 0) + delta)
+    windSpeedEl.value = val
+    updateWindLine()
+}
+
 if (localStorage.getItem('runways') === null) {
     configureLocalStorage()
 }
@@ -329,3 +343,5 @@ updateWindLine()
 window.updateWindLine = updateWindLine
 window.reconfigureRunways = reconfigureRunways
 window.reset = reset
+window.adjustWindDirection = adjustWindDirection
+window.adjustWindSpeed = adjustWindSpeed
