@@ -66,8 +66,18 @@
                 <p id="crossWind" aria-live="polite" aria-atomic="true"><span id="crossWindValue"></span></p>
 
                 <div class="action-buttons">
-                    <button class="btn btn-secondary" onclick="window.reconfigureRunways()">Reconfigure runways</button>
+                    <button class="btn btn-secondary" id="reconfigureBtn" onclick="window.reconfigureRunways()">Reconfigure runways</button>
                     <button class="btn btn-secondary" onclick="window.reset()">Reset</button>
+                </div>
+
+                <div id="runwayConfig" hidden>
+                    <label for="runwayConfigInput">Runway numbers (comma-separated)</label>
+                    <input type="text" id="runwayConfigInput" name="runwayConfigInput" inputmode="numeric" placeholder="e.g. 09, 27" />
+                    <p id="runwayConfigError" class="config-error" hidden></p>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="window.applyRunwayConfig()">Apply</button>
+                        <button class="btn btn-secondary" onclick="window.closeRunwayConfig()">Cancel</button>
+                    </div>
                 </div>
             </div>
 

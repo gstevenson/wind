@@ -24,6 +24,9 @@ const windSpeedEl = document.getElementById('windSpeed')
 const idealRunwayValueEl = document.getElementById('idealRunwayValue')
 const headWindValueEl = document.getElementById('headWindValue')
 const crossWindValueEl = document.getElementById('crossWindValue')
+const runwayConfigPanelEl = document.getElementById('runwayConfig')
+const runwayConfigInputEl = document.getElementById('runwayConfigInput')
+const runwayConfigErrorEl = document.getElementById('runwayConfigError')
 
 let runways = JSON.parse(localStorage.getItem('runways'))
 
@@ -316,17 +319,27 @@ function configureLocalStorage() {
 }
 
 function reconfigureRunways() {
-    const currentNumbers = runways.map((r) => angleToRunwayNumber(r)).join(', ')
-    const newRunways = window.prompt('Enter a comma separated list of runway numbers (e.g. 09, 27)', currentNumbers)
+    runwayConfigInputEl.value = runways.map((r) => angleToRunwayNumber(r)).join(', ')
+    runwayConfigErrorEl.hidden = true
+    runwayConfigPanelEl.hidden = false
+    runwayConfigInputEl.focus()
+}
 
-    if (newRunways === null || newRunways === '') {
+function applyRunwayConfig() {
+    const parsed = parseRunwayInput(runwayConfigInputEl.value)
+    if (!parsed.length) {
+        runwayConfigErrorEl.textContent = 'Invalid runway numbers — enter e.g. 09, 27'
+        runwayConfigErrorEl.hidden = false
         return
     }
-
-    runways = parseRunwayInput(newRunways)
+    runways = parsed
     localStorage.setItem('runways', JSON.stringify(runways))
-
+    runwayConfigPanelEl.hidden = true
     updateWindLine()
+}
+
+function closeRunwayConfig() {
+    runwayConfigPanelEl.hidden = true
 }
 
 function reset() {
@@ -367,6 +380,8 @@ window.addEventListener('resize', () => {
 
 window.updateWindLine = updateWindLine
 window.reconfigureRunways = reconfigureRunways
+window.applyRunwayConfig = applyRunwayConfig
+window.closeRunwayConfig = closeRunwayConfig
 window.reset = reset
 window.adjustWindDirection = adjustWindDirection
 window.adjustWindSpeed = adjustWindSpeed

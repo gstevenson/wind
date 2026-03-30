@@ -354,6 +354,60 @@ label {
     outline: none;
 }
 
+/* Runway config panel */
+#runwayConfig {
+    margin-top: 16px;
+    padding: 16px;
+    background: #1c2333;
+    border: 2px solid #2e3f58;
+    border-radius: 10px;
+}
+
+#runwayConfig label {
+    margin-top: 0;
+}
+
+#runwayConfig input[type='text'] {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;
+    margin-top: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: #0e1117;
+    border: 2px solid #2e3f58;
+    border-radius: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#runwayConfig input[type='text']:focus {
+    border-color: #99005b;
+    box-shadow: 0 0 0 3px rgba(153, 0, 91, 0.25);
+    outline: none;
+}
+
+.config-error {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    color: #f87171;
+}
+
+.btn-primary {
+    border-color: #4fc3f7;
+    color: #4fc3f7;
+}
+
+.btn-primary:active {
+    background: rgba(79, 195, 247, 0.15);
+}
+
+.btn-primary:focus-visible {
+    outline: 3px solid #4fc3f7;
+    outline-offset: 2px;
+}
+
 /* Stepper layout */
 .number-input.stepper {
     display: flex;
