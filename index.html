@@ -48,22 +48,23 @@
                 <label for="windInput">Wind Direction</label>
 
                 <div class="number-input">
-                    <input type="number" id="windInput" name="windInput" min="0" max="359" value="180" oninput="window.updateWindLine()" />
+                    <input type="number" id="windInput" name="windInput" min="0" max="359" value="180" inputmode="numeric" oninput="window.updateWindLine()" />
                 </div>
 
                 <label for="windSpeed">Wind Speed</label>
 
                 <div class="number-input">
-                    <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" oninput="window.updateWindLine()" />
+                    <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" inputmode="numeric" oninput="window.updateWindLine()" />
                 </div>
 
                 <p id="idealRunway">Ideal runway: <span id="idealRunwayValue"></span></p>
                 <p id="headWind"><span id="headWindValue"></span></p>
                 <p id="crossWind"><span id="crossWindValue"></span></p>
 
-                <p><a href="#" onclick="window.reconfigureRunways()">Reconfigure runways</a></p>
-
-                <p><a href="#" onclick="window.reset()">Reset</a></p>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="window.reconfigureRunways()">Reconfigure runways</button>
+                    <button class="btn btn-secondary" onclick="window.reset()">Reset</button>
+                </div>
             </div>
 
             <script src="js/app.js"></script>
