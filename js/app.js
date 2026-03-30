@@ -209,9 +209,55 @@ function drawParticles() {
     ctx.restore()
 }
 
+function drawAirplane(closest) {
+    const headingRad = degreesToRadians(closest, -90)
+    // Place on the approach half of the runway, facing the landing direction
+    const planeX = centerX - radius * 0.35 * Math.cos(headingRad)
+    const planeY = centerY - radius * 0.35 * Math.sin(headingRad)
+
+    ctx.save()
+    ctx.translate(planeX, planeY)
+    ctx.rotate(headingRad + Math.PI / 2)
+    ctx.fillStyle = 'white'
+    ctx.shadowColor = 'rgba(220, 240, 255, 0.6)'
+    ctx.shadowBlur = 6
+
+    // Fuselage
+    ctx.beginPath()
+    ctx.moveTo(0, -12)
+    ctx.lineTo(2.5, -6)
+    ctx.lineTo(2, 6)
+    ctx.lineTo(4, 11)    // tail fin right
+    ctx.lineTo(0, 9)
+    ctx.lineTo(-4, 11)   // tail fin left
+    ctx.lineTo(-2, 6)
+    ctx.lineTo(-2.5, -6)
+    ctx.closePath()
+    ctx.fill()
+
+    // Left wing
+    ctx.beginPath()
+    ctx.moveTo(-2.5, -3)
+    ctx.lineTo(-13, 3)
+    ctx.lineTo(-2, 5)
+    ctx.closePath()
+    ctx.fill()
+
+    // Right wing
+    ctx.beginPath()
+    ctx.moveTo(2.5, -3)
+    ctx.lineTo(13, 3)
+    ctx.lineTo(2, 5)
+    ctx.closePath()
+    ctx.fill()
+
+    ctx.restore()
+}
+
 function animateFrame() {
     setupCanvas(animState.closest)
     drawParticles()
+    drawAirplane(animState.closest)
     drawWindLine(animState.windAngle)
     animFrameId = requestAnimationFrame(animateFrame)
 }
