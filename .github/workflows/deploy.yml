@@ -8,22 +8,23 @@ on:
 
     workflow_dispatch:
 
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
 jobs:
     build:
-        name: Build and deploy application to GitHub pages
+        name: Build application
         runs-on: ubuntu-latest
-        permissions:
-            contents: write
-
         steps:
             - name: Checkout the code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup Node
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: 22
-                  registry-url: https://registry.npmjs.org/
 
             - name: Clean install npm packages
               run: npm ci
@@ -34,9 +35,21 @@ jobs:
             - name: Build
               run: npm run build
 
-            - name: Deploy built application to GitHub pages
+            - name: Upload Pages artifact
               if: github.event_name == 'push'
-              uses: peaceiris/actions-gh-pages@v3
+              uses: actions/upload-pages-artifact@v3
               with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./dist
+                  path: ./dist
+
+    deploy:
+        name: Deploy to GitHub Pages
+        needs: build
+        if: github.event_name == 'push'
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - name: Deploy
+              uses: actions/deploy-pages@v4
+              id: deployment
