@@ -177,7 +177,7 @@ function drawParticles() {
     const dy = Math.sin(moveRad)
     const perpX = -dy
     const perpY = dx
-    const speedScale = Math.max(0.5, windSpeed / 12)
+    const speedScale = Math.max(0.5, windSpeed / 18)
 
     ctx.save()
     ctx.beginPath()
