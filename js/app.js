@@ -27,29 +27,42 @@ function degreesToRadians(degrees, offset = 0) {
 function setupCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+    // Rose background
     ctx.beginPath()
-    ctx.strokeStyle = '#99005b'
-    ctx.lineWidth = 6
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
-    ctx.fillStyle = '#c5c6d0'
+    ctx.fillStyle = '#0a1520'
     ctx.fill()
+    ctx.strokeStyle = '#2e5a7a'
+    ctx.lineWidth = 3
     ctx.stroke()
+
+    // Compass tick marks
+    for (let deg = 0; deg < 360; deg += 10) {
+        const angleRad = degreesToRadians(deg, -90)
+        const isCardinal = deg % 90 === 0
+        const tickLen = isCardinal ? 16 : deg % 30 === 0 ? 11 : 6
+        ctx.beginPath()
+        ctx.strokeStyle = isCardinal ? '#4a9fd4' : '#2a5070'
+        ctx.lineWidth = isCardinal ? 2 : 1
+        ctx.moveTo(centerX + radius * Math.cos(angleRad), centerY + radius * Math.sin(angleRad))
+        ctx.lineTo(centerX + (radius - tickLen) * Math.cos(angleRad), centerY + (radius - tickLen) * Math.sin(angleRad))
+        ctx.stroke()
+    }
+
+    // Cardinal labels
+    ;[{ label: 'N', deg: 0 }, { label: 'E', deg: 90 }, { label: 'S', deg: 180 }, { label: 'W', deg: 270 }].forEach(({ label, deg }) => {
+        const angleRad = degreesToRadians(deg, -90)
+        const r = radius - 28
+        ctx.fillStyle = '#4a9fd4'
+        ctx.font = 'bold 14px Arial'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(label, centerX + r * Math.cos(angleRad), centerY + r * Math.sin(angleRad))
+    })
 
     runways.forEach((angle) => drawRunwayLine(angle))
 }
 
-function drawArrowhead(x, y, radians) {
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.rotate(radians)
-    ctx.beginPath()
-    ctx.moveTo(0, 0)
-    ctx.lineTo(-5, -10)
-    ctx.lineTo(5, -10)
-    ctx.closePath()
-    ctx.restore()
-    ctx.fill()
-}
 
 function angleToRunwayNumber(angleDegrees) {
     let runwayNumber = Math.round(angleDegrees / 10)
@@ -59,25 +72,32 @@ function angleToRunwayNumber(angleDegrees) {
     return runwayNumber.toString().padStart(2, '0')
 }
 
-function drawWindLine(angleDegrees, numberOfArrows) {
+function drawWindLine(angleDegrees) {
     const angleRadians = degreesToRadians(angleDegrees, -90)
-    const lineLength = radius * 1.5
+    const tipX = centerX + radius * 0.85 * Math.cos(angleRadians)
+    const tipY = centerY + radius * 0.85 * Math.sin(angleRadians)
+    const tailX = centerX - radius * 0.3 * Math.cos(angleRadians)
+    const tailY = centerY - radius * 0.3 * Math.sin(angleRadians)
 
-    ctx.strokeStyle = 'blue'
-    ctx.lineWidth = 1
+    ctx.strokeStyle = '#ffaa00'
+    ctx.lineWidth = 3
+    ctx.lineCap = 'round'
     ctx.beginPath()
-    ctx.moveTo(centerX, centerY)
-    ctx.lineTo(centerX + lineLength * Math.cos(angleRadians), centerY + lineLength * Math.sin(angleRadians))
+    ctx.moveTo(tailX, tailY)
+    ctx.lineTo(tipX, tipY)
     ctx.stroke()
 
-    const interval = lineLength / (numberOfArrows + 1)
-    ctx.fillStyle = 'blue'
-
-    for (let i = 1; i <= numberOfArrows; i++) {
-        const x = centerX + i * interval * Math.cos(angleRadians)
-        const y = centerY + i * interval * Math.sin(angleRadians)
-        drawArrowhead(x, y, angleRadians + Math.PI / 2)
-    }
+    ctx.fillStyle = '#ffaa00'
+    ctx.save()
+    ctx.translate(tipX, tipY)
+    ctx.rotate(angleRadians + Math.PI / 2)
+    ctx.beginPath()
+    ctx.moveTo(0, 0)
+    ctx.lineTo(-8, -20)
+    ctx.lineTo(8, -20)
+    ctx.closePath()
+    ctx.fill()
+    ctx.restore()
 }
 
 function drawRunwayLine(angleDegrees) {
@@ -89,19 +109,32 @@ function drawRunwayLine(angleDegrees) {
     const endX = centerX + lineLength * Math.cos(angleRadians)
     const endY = centerY + lineLength * Math.sin(angleRadians)
 
+    // Asphalt surface
     ctx.beginPath()
-    ctx.strokeStyle = 'grey'
-    ctx.lineWidth = 4
+    ctx.strokeStyle = '#3a3f52'
+    ctx.lineWidth = 10
+    ctx.lineCap = 'butt'
     ctx.moveTo(startX, startY)
     ctx.lineTo(endX, endY)
     ctx.stroke()
 
-    const textPadding = 15
+    // Dashed centreline
+    ctx.beginPath()
+    ctx.strokeStyle = '#c8ccd8'
+    ctx.lineWidth = 1.5
+    ctx.lineCap = 'round'
+    ctx.setLineDash([8, 6])
+    ctx.moveTo(startX, startY)
+    ctx.lineTo(endX, endY)
+    ctx.stroke()
+    ctx.setLineDash([])
+
+    const textPadding = 18
     const textX = endX + textPadding * Math.cos(angleRadians - Math.PI / 2)
     const textY = endY + textPadding * Math.sin(angleRadians - Math.PI / 2)
 
-    ctx.fillStyle = 'black'
-    ctx.font = '16px Arial'
+    ctx.fillStyle = '#c8ccd8'
+    ctx.font = 'bold 14px Arial'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.fillText(angleToRunwayNumber(angleDegrees), textX, textY)
@@ -113,7 +146,7 @@ function updateWindLine() {
 
     if (windAngle !== '' && windSpeed !== '') {
         setupCanvas()
-        drawWindLine(parseInt(windAngle, 10), 3)
+        drawWindLine(parseInt(windAngle, 10))
 
         const closest = findClosest(windAngle)
         idealRunwayValueEl.textContent = angleToRunwayNumber(closest)
