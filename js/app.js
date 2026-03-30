@@ -352,6 +352,11 @@ if (localStorage.getItem('runways') === null) {
     configureLocalStorage()
 }
 
+windInputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') { e.preventDefault(); adjustWindDirection(10) }
+    if (e.key === 'ArrowDown') { e.preventDefault(); adjustWindDirection(-10) }
+})
+
 setupCanvas()
 updateWindLine()
 

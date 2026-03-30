@@ -42,28 +42,28 @@
             <div class="header">
                 <h1 class="roboto-black">Runway / Wind Calculator</h1>
             </div>
-            <canvas id="myCanvas"> Your browser does not support the canvas element. </canvas>
+            <canvas id="myCanvas" role="img" aria-label="Wind rose showing runways and current wind direction"> Your browser does not support the canvas element. </canvas>
 
             <div class="controls-container">
                 <label for="windInput">Wind Direction</label>
 
                 <div class="number-input stepper">
-                    <button class="btn-stepper" onclick="window.adjustWindDirection(-10)">−</button>
+                    <button class="btn-stepper" aria-label="Decrease wind direction by 10 degrees" onclick="window.adjustWindDirection(-10)">−</button>
                     <input type="number" id="windInput" name="windInput" min="0" max="359" value="180" inputmode="numeric" oninput="window.updateWindLine()" />
-                    <button class="btn-stepper" onclick="window.adjustWindDirection(10)">+</button>
+                    <button class="btn-stepper" aria-label="Increase wind direction by 10 degrees" onclick="window.adjustWindDirection(10)">+</button>
                 </div>
 
                 <label for="windSpeed">Wind Speed</label>
 
                 <div class="number-input stepper">
-                    <button class="btn-stepper" onclick="window.adjustWindSpeed(-1)">−</button>
+                    <button class="btn-stepper" aria-label="Decrease wind speed by 1 knot" onclick="window.adjustWindSpeed(-1)">−</button>
                     <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" inputmode="numeric" oninput="window.updateWindLine()" />
-                    <button class="btn-stepper" onclick="window.adjustWindSpeed(1)">+</button>
+                    <button class="btn-stepper" aria-label="Increase wind speed by 1 knot" onclick="window.adjustWindSpeed(1)">+</button>
                 </div>
 
-                <p id="idealRunway">Ideal runway: <span id="idealRunwayValue"></span></p>
-                <p id="headWind"><span id="headWindValue"></span></p>
-                <p id="crossWind"><span id="crossWindValue"></span></p>
+                <p id="idealRunway" aria-live="polite" aria-atomic="true">Ideal runway: <span id="idealRunwayValue"></span></p>
+                <p id="headWind" aria-live="polite" aria-atomic="true"><span id="headWindValue"></span></p>
+                <p id="crossWind" aria-live="polite" aria-atomic="true"><span id="crossWindValue"></span></p>
 
                 <div class="action-buttons">
                     <button class="btn btn-secondary" onclick="window.reconfigureRunways()">Reconfigure runways</button>

@@ -388,6 +388,11 @@ label {
     background: #2e3f58;
 }
 
+.btn-stepper:focus-visible {
+    outline: 3px solid #4fc3f7;
+    outline-offset: 2px;
+}
+
 /* Buttons */
 .action-buttons {
     display: flex;
@@ -414,6 +419,11 @@ label {
 
 .btn:active {
     background: #2e3f58;
+}
+
+.btn:focus-visible {
+    outline: 3px solid #4fc3f7;
+    outline-offset: 2px;
 }
 
 .btn-secondary {
