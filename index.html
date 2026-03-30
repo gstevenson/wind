@@ -37,33 +37,36 @@
         />
     </head>
 
-    <body class="roboto-regular">
-        <h1 class="roboto-black">Runway / Wind Calculator</h1>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 class="roboto-black">Runway / Wind Calculator</h1>
+            </div>
+            <canvas id="myCanvas"> Your browser does not support the canvas element. </canvas>
 
-        <canvas id="myCanvas"> Your browser does not support the canvas element. </canvas>
+            <div class="controls-container">
+                <label for="windInput">Wind Direction</label>
 
-        <div class="controls-container">
-            <label for="windInput">Wind Direction</label>
+                <div class="number-input">
+                    <input type="number" id="windInput" name="windInput" min="0" max="359" value="180" oninput="window.updateWindLine()" />
+                </div>
 
-            <div class="number-input">
-                <input type="number" id="windInput" name="windInput" min="0" max="359" value="180" oninput="window.updateWindLine()" />
+                <label for="windSpeed">Wind Speed</label>
+
+                <div class="number-input">
+                    <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" oninput="window.updateWindLine()" />
+                </div>
+
+                <p id="idealRunway">Ideal runway: <span id="idealRunwayValue"></span></p>
+                <p id="headWind"><span id="headWindValue"></span></p>
+                <p id="crossWind"><span id="crossWindValue"></span></p>
+
+                <p><a href="#" onclick="window.reconfigureRunways()">Reconfigure runways</a></p>
+
+                <p><a href="#" onclick="window.reset()">Reset</a></p>
             </div>
 
-            <label for="windSpeed">Wind Speed</label>
-
-            <div class="number-input">
-                <input type="number" id="windSpeed" name="windSpeed" min="0" max="50" value="10" oninput="window.updateWindLine()" />
-            </div>
-
-            <p id="idealRunway">Ideal runway: <span id="idealRunwayValue"></span></p>
-            <p id="headWind"><span id="headWindValue"></span></p>
-            <p id="crossWind"><span id="crossWindValue"></span></p>
-
-            <p><a href="#" onclick="window.reconfigureRunways()">Reconfigure runways</a></p>
-
-            <p><a href="#" onclick="window.reset()">Reset</a></p>
+            <script src="js/app.js"></script>
         </div>
-
-        <script src="js/app.js"></script>
     </body>
 </html>

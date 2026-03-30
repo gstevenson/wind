@@ -1,22 +1,18 @@
-var canvas = document.getElementById('myCanvas')
+const canvas = document.getElementById('myCanvas')
 
-var heightRatio = 1
-canvas.height = canvas.width * heightRatio
+canvas.height = canvas.width
 
-var ctx = canvas.getContext('2d')
+const ctx = canvas.getContext('2d')
 
-var centerX = canvas.width / 2
-var centerY = canvas.height / 2
-var radius = (canvas.width / 2) * 0.8
+const centerX = canvas.width / 2
+const centerY = canvas.height / 2
+const radius = (canvas.width / 2) * 0.8
 
-var runways = JSON.parse(localStorage.getItem('runways'))
-
-ctx.beginPath()
+let runways = JSON.parse(localStorage.getItem('runways'))
 
 function setupCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Setup for the circle
     ctx.beginPath()
     ctx.strokeStyle = '#99005b'
     ctx.lineWidth = 6
@@ -25,10 +21,7 @@ function setupCanvas() {
     ctx.fill()
     ctx.stroke()
 
-    // Draw the fixed runway lines
-    runways.forEach(function (angle) {
-        drawRunwayLine(angle)
-    })
+    runways.forEach(angle => drawRunwayLine(angle))
 }
 
 function drawArrowhead(ctx, x, y, radians) {
@@ -45,21 +38,18 @@ function drawArrowhead(ctx, x, y, radians) {
 }
 
 function angleToRunwayNumber(angleDegrees) {
-    let runwayNumber = Math.round(angleDegrees / 10) // Divide by 10 and round to get the basic number
+    let runwayNumber = Math.round(angleDegrees / 10)
     if (runwayNumber >= 100) {
-        // If the runway number is 100 or more, modulo by 100 to keep it within two digits
         runwayNumber = runwayNumber % 100
     }
-    return runwayNumber.toString().padStart(2, '0') // Ensure it's a two-digit string
+    return runwayNumber.toString().padStart(2, '0')
 }
 
 function drawWindLine(angleDegrees, numberOfArrows) {
-    var adjustedAngleDegrees = angleDegrees - 90
-    var angleRadians = adjustedAngleDegrees * (Math.PI / 180)
+    const adjustedAngleDegrees = angleDegrees - 90
+    const angleRadians = adjustedAngleDegrees * (Math.PI / 180)
+    const lineLength = radius * 1.5
 
-    var lineLength = radius * 1.5 // Length of the line from center
-
-    // Draw the main wind line
     ctx.strokeStyle = 'blue'
     ctx.lineWidth = 1
     ctx.beginPath()
@@ -67,33 +57,26 @@ function drawWindLine(angleDegrees, numberOfArrows) {
     ctx.lineTo(centerX + lineLength * Math.cos(angleRadians), centerY + lineLength * Math.sin(angleRadians))
     ctx.stroke()
 
-    // Calculate the interval at which arrows should be placed on the line
-    var interval = lineLength / (numberOfArrows + 1)
-
-    // Set the style for the arrows
+    const interval = lineLength / (numberOfArrows + 1)
     ctx.fillStyle = 'blue'
 
-    // Draw the arrows along the line
-    for (var i = 1; i <= numberOfArrows; i++) {
-        var x = centerX + i * interval * Math.cos(angleRadians)
-        var y = centerY + i * interval * Math.sin(angleRadians)
+    for (let i = 1; i <= numberOfArrows; i++) {
+        const x = centerX + i * interval * Math.cos(angleRadians)
+        const y = centerY + i * interval * Math.sin(angleRadians)
         drawArrowhead(ctx, x, y, angleRadians + Math.PI / 2)
     }
 }
 
 function drawRunwayLine(angleDegrees) {
-    // Adjust the angle by subtracting 90 degrees
-    var adjustedAngleDegrees = angleDegrees - 270
-    var angleRadians = adjustedAngleDegrees * (Math.PI / 180)
+    const adjustedAngleDegrees = angleDegrees - 270
+    const angleRadians = adjustedAngleDegrees * (Math.PI / 180)
+    const lineLength = Math.sqrt(2) * radius * 0.5
 
-    // Calculate start and end points for the line
-    var lineLength = Math.sqrt(2) * radius * 0.5
-    var startX = centerX - lineLength * Math.cos(angleRadians)
-    var startY = centerY - lineLength * Math.sin(angleRadians)
-    var endX = centerX + lineLength * Math.cos(angleRadians)
-    var endY = centerY + lineLength * Math.sin(angleRadians)
+    const startX = centerX - lineLength * Math.cos(angleRadians)
+    const startY = centerY - lineLength * Math.sin(angleRadians)
+    const endX = centerX + lineLength * Math.cos(angleRadians)
+    const endY = centerY + lineLength * Math.sin(angleRadians)
 
-    // Drawing the line
     ctx.beginPath()
     ctx.strokeStyle = 'grey'
     ctx.lineWidth = 4
@@ -101,109 +84,73 @@ function drawRunwayLine(angleDegrees) {
     ctx.lineTo(endX, endY)
     ctx.stroke()
 
-    // Adding runway number text at the end of the line
-    var textPadding = 15 // Padding from the end of the line to the start of the text
-    var textX = endX + textPadding * Math.cos(angleRadians - Math.PI / 2)
-    var textY = endY + textPadding * Math.sin(angleRadians - Math.PI / 2)
+    const textPadding = 15
+    const textX = endX + textPadding * Math.cos(angleRadians - Math.PI / 2)
+    const textY = endY + textPadding * Math.sin(angleRadians - Math.PI / 2)
 
     ctx.fillStyle = 'black'
-    ctx.font = '16px Arial' // Set the font size and family
-    ctx.textAlign = 'center' // Center the text horizontally on the calculated point
-    ctx.textBaseline = 'middle' // Center the text vertically on the calculated point
-
-    let runwayText = angleToRunwayNumber(angleDegrees) // Convert to runway number
-    ctx.fillText(runwayText, textX, textY)
+    ctx.font = '16px Arial'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(angleToRunwayNumber(angleDegrees), textX, textY)
 }
 
 function updateWindLine() {
-    var windAngle = document.getElementById('windInput').value
-    var windSpeed = document.getElementById('windSpeed').value
+    const windAngle = document.getElementById('windInput').value
+    const windSpeed = document.getElementById('windSpeed').value
 
     if (windAngle !== '' && windSpeed !== '') {
-        setupCanvas() // Clears the canvas and redraws the base elements
-        drawWindLine(parseInt(windAngle, 10), 3) // Draws the wind line with the specified number of arrows
+        setupCanvas()
+        drawWindLine(parseInt(windAngle, 10), 3)
 
-        var runway = angleToRunwayNumber(findClosest(windAngle))
-
-        document.getElementById('idealRunwayValue').textContent = runway
-
-        calcWind(windAngle, windSpeed, findClosest(windAngle))
+        const closest = findClosest(windAngle)
+        document.getElementById('idealRunwayValue').textContent = angleToRunwayNumber(closest)
+        calcWind(windAngle, windSpeed, closest)
     }
 }
 
 function calcWind(windAngle, windSpeed, runway) {
-    var recip = runway < 180 ? runway + 180 : runway - 180
+    const recip = runway < 180 ? runway + 180 : runway - 180
+    const rwyrad = (runway * Math.PI) / 180
+    const windrad = (windAngle * Math.PI) / 180
 
-    // Convert degrees to radians more concisely
-    var rwyrad = (runway * Math.PI) / 180
-    var windrad = (windAngle * Math.PI) / 180
+    const rwyVector = { x: Math.sin(rwyrad), y: Math.cos(rwyrad) }
+    const windVector = { x: Math.sin(windrad), y: Math.cos(windrad) }
 
-    // Calculate runway and wind vectors
-    var rwyVector = { x: Math.sin(rwyrad), y: Math.cos(rwyrad) }
-    var windVector = { x: Math.sin(windrad), y: Math.cos(windrad) }
+    const dotprod = rwyVector.x * windVector.x + rwyVector.y * windVector.y
+    const thetarad = Math.acos(dotprod)
 
-    // Dot product and angle between runway and wind vectors
-    var dotprod = rwyVector.x * windVector.x + rwyVector.y * windVector.y
-    var thetarad = Math.acos(dotprod)
+    const sigfig = 100
+    const headortail_component = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
+    const xwind_component = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
 
-    // Rounding for significant figures
-    var sigfig = 100
-    var headortail_component = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
-    var xwind_component = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
-
-    // Determine head/tailwind and crosswind direction more efficiently
-    var headOrTail = headortail_component >= 0 ? 'Headwind: ' : 'Tailwind: '
-
-    // Simplified logic for determining crosswind direction
-    var wind_direction =
+    const headOrTail = headortail_component >= 0 ? 'Headwind: ' : 'Tailwind: '
+    const wind_direction =
         'Crosswind from ' + ((windAngle >= runway && windAngle < recip) || (runway >= 180 && (windAngle >= runway || windAngle < recip)) ? 'Right: ' : 'Left: ')
 
-    // Update DOM elements
     document.getElementById('headWindValue').textContent = headOrTail + headortail_component + 'kt(s)'
     document.getElementById('crossWindValue').textContent = wind_direction + xwind_component + 'kt(s)'
 }
 
 function findClosest(value) {
-    // Find the closest value
-    return runways.reduce((closest, current) => {
-        // Calculate the absolute difference
-        const diffClosest = Math.abs(closest - value)
-        const diffCurrent = Math.abs(current - value)
-
-        // If the current value is closer, return it; otherwise, keep the previous closest
-        return diffCurrent < diffClosest ? current : closest
-    })
-}
-
-function angleToRunwayNumber(angleDegrees) {
-    let runwayNumber = Math.round(angleDegrees / 10) // Divide by 10 and round to get the basic number
-    if (runwayNumber >= 100) {
-        // If the runway number is 100 or more, modulo by 100 to keep it within two digits
-        runwayNumber = runwayNumber % 100
-    }
-    return runwayNumber.toString().padStart(2, '0') // Ensure it's a two-digit string
+    return runways.reduce((closest, current) =>
+        Math.abs(current - value) < Math.abs(closest - value) ? current : closest
+    )
 }
 
 function configureLocalStorage() {
     runways = [20, 200, 140, 320]
-
     localStorage.setItem('runways', JSON.stringify(runways))
 }
 
 function reconfigureRunways() {
-    var runw = JSON.parse(localStorage.getItem('runways'))
-    var newRunways = window.prompt('Enter a comma separated list of runways, using full magnetic heading', runw.join(', '))
+    const newRunways = window.prompt('Enter a comma separated list of runways, using full magnetic heading', runways.join(', '))
 
-    if (newRunways == null || newRunways == '') {
+    if (newRunways === null || newRunways === '') {
         return
     }
 
-    var numbersArray = newRunways.split(', ').map(function (item) {
-        return parseInt(item, 10)
-    })
-
-    runways = numbersArray
-
+    runways = newRunways.split(', ').map(item => parseInt(item, 10))
     localStorage.setItem('runways', JSON.stringify(runways))
 
     setupCanvas()
@@ -211,14 +158,12 @@ function reconfigureRunways() {
 }
 
 function reset() {
-    console.log('setting up application')
-
     configureLocalStorage()
     setupCanvas()
     updateWindLine()
 }
 
-if (localStorage.getItem('runways') == null) {
+if (localStorage.getItem('runways') === null) {
     configureLocalStorage()
 }
 
@@ -226,7 +171,5 @@ setupCanvas()
 updateWindLine()
 
 window.updateWindLine = updateWindLine
-
 window.reconfigureRunways = reconfigureRunways
-
 window.reset = reset
