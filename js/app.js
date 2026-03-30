@@ -8,7 +8,20 @@ const centerX = canvas.width / 2
 const centerY = canvas.height / 2
 const radius = (canvas.width / 2) * 0.8
 
+const DEG_TO_RAD = Math.PI / 180
+
+// Cached DOM references
+const windInputEl = document.getElementById('windInput')
+const windSpeedEl = document.getElementById('windSpeed')
+const idealRunwayValueEl = document.getElementById('idealRunwayValue')
+const headWindValueEl = document.getElementById('headWindValue')
+const crossWindValueEl = document.getElementById('crossWindValue')
+
 let runways = JSON.parse(localStorage.getItem('runways'))
+
+function degreesToRadians(degrees, offset = 0) {
+    return (degrees + offset) * DEG_TO_RAD
+}
 
 function setupCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -24,7 +37,7 @@ function setupCanvas() {
     runways.forEach((angle) => drawRunwayLine(angle))
 }
 
-function drawArrowhead(ctx, x, y, radians) {
+function drawArrowhead(x, y, radians) {
     ctx.save()
     ctx.translate(x, y)
     ctx.rotate(radians)
@@ -46,8 +59,7 @@ function angleToRunwayNumber(angleDegrees) {
 }
 
 function drawWindLine(angleDegrees, numberOfArrows) {
-    const adjustedAngleDegrees = angleDegrees - 90
-    const angleRadians = adjustedAngleDegrees * (Math.PI / 180)
+    const angleRadians = degreesToRadians(angleDegrees, -90)
     const lineLength = radius * 1.5
 
     ctx.strokeStyle = 'blue'
@@ -63,13 +75,12 @@ function drawWindLine(angleDegrees, numberOfArrows) {
     for (let i = 1; i <= numberOfArrows; i++) {
         const x = centerX + i * interval * Math.cos(angleRadians)
         const y = centerY + i * interval * Math.sin(angleRadians)
-        drawArrowhead(ctx, x, y, angleRadians + Math.PI / 2)
+        drawArrowhead(x, y, angleRadians + Math.PI / 2)
     }
 }
 
 function drawRunwayLine(angleDegrees) {
-    const adjustedAngleDegrees = angleDegrees - 270
-    const angleRadians = adjustedAngleDegrees * (Math.PI / 180)
+    const angleRadians = degreesToRadians(angleDegrees, -270)
     const lineLength = Math.sqrt(2) * radius * 0.5
 
     const startX = centerX - lineLength * Math.cos(angleRadians)
@@ -96,23 +107,23 @@ function drawRunwayLine(angleDegrees) {
 }
 
 function updateWindLine() {
-    const windAngle = document.getElementById('windInput').value
-    const windSpeed = document.getElementById('windSpeed').value
+    const windAngle = windInputEl.value
+    const windSpeed = windSpeedEl.value
 
     if (windAngle !== '' && windSpeed !== '') {
         setupCanvas()
         drawWindLine(parseInt(windAngle, 10), 3)
 
         const closest = findClosest(windAngle)
-        document.getElementById('idealRunwayValue').textContent = angleToRunwayNumber(closest)
+        idealRunwayValueEl.textContent = angleToRunwayNumber(closest)
         calcWind(windAngle, windSpeed, closest)
     }
 }
 
 function calcWind(windAngle, windSpeed, runway) {
     const recip = runway < 180 ? runway + 180 : runway - 180
-    const rwyrad = (runway * Math.PI) / 180
-    const windrad = (windAngle * Math.PI) / 180
+    const rwyrad = runway * DEG_TO_RAD
+    const windrad = windAngle * DEG_TO_RAD
 
     const rwyVector = { x: Math.sin(rwyrad), y: Math.cos(rwyrad) }
     const windVector = { x: Math.sin(windrad), y: Math.cos(windrad) }
@@ -121,15 +132,15 @@ function calcWind(windAngle, windSpeed, runway) {
     const thetarad = Math.acos(dotprod)
 
     const sigfig = 100
-    const headortail_component = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
-    const xwind_component = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
+    const headTailComponent = Math.round(sigfig * windSpeed * Math.cos(thetarad)) / sigfig
+    const crosswindComponent = Math.round(sigfig * windSpeed * Math.sin(thetarad)) / sigfig
 
-    const headOrTail = headortail_component >= 0 ? 'Headwind: ' : 'Tailwind: '
-    const wind_direction =
+    const headOrTail = headTailComponent >= 0 ? 'Headwind: ' : 'Tailwind: '
+    const crosswindSide =
         'Crosswind from ' + ((windAngle >= runway && windAngle < recip) || (runway >= 180 && (windAngle >= runway || windAngle < recip)) ? 'Right: ' : 'Left: ')
 
-    document.getElementById('headWindValue').textContent = headOrTail + headortail_component + 'kt(s)'
-    document.getElementById('crossWindValue').textContent = wind_direction + xwind_component + 'kt(s)'
+    headWindValueEl.textContent = headOrTail + headTailComponent + 'kt(s)'
+    crossWindValueEl.textContent = crosswindSide + crosswindComponent + 'kt(s)'
 }
 
 function findClosest(value) {
@@ -151,13 +162,11 @@ function reconfigureRunways() {
     runways = newRunways.split(', ').map((item) => parseInt(item, 10))
     localStorage.setItem('runways', JSON.stringify(runways))
 
-    setupCanvas()
     updateWindLine()
 }
 
 function reset() {
     configureLocalStorage()
-    setupCanvas()
     updateWindLine()
 }
 
