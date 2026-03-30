@@ -250,80 +250,143 @@ textarea {
 
 /* Custom */
 
-/* General styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body,
 html {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background: #72a0c1; /* Pale blue background */
+    background: #0e1117;
+    color: #ffffff;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
-    background: #72a0c1;
+    padding: 16px;
+    background: #0e1117;
+    min-height: 100vh;
 }
 
 .header h1 {
     text-align: center;
-    color: #333;
+    color: #ffffff;
+    font-size: 1.3rem;
+    margin: 0 0 12px;
 }
 
 canvas {
-    /* Your existing canvas styles */
-    border: 1px solid #000;
+    display: block;
+    margin: 0 auto;
     background-color: #3e7e00;
+    border-radius: 6px;
+}
 
-    margin: 20px;
+/* Result cards */
+#idealRunway,
+#headWind,
+#crossWind {
+    margin: 8px 0;
+    padding: 14px 16px;
+    background: #1c2333;
+    border-radius: 10px;
+    border-left: 5px solid #99005b;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+#idealRunway {
+    border-left-color: #4fc3f7;
 }
 
 p,
 label {
-    color: #c5fffd;
-}
-
-.myCanvas {
-    width: 100%;
+    color: #ffffff;
+    margin: 0;
 }
 
 .controls-container {
-    margin: 20px;
-    padding-bottom: 50px;
+    margin: 16px 0;
+    padding-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #8a9bb5;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .controls-container input[type='number'] {
-    margin: 8px 0;
-    font-family: 'Roboto', sans-serif;
-    font-size: 22px;
-    border: 3px solid gray; /* Gray border */
-    border-radius: 4px; /* Rounded borders */
-    box-sizing: border-box; /* Making padding not affect width */
-    -webkit-appearance: none; /* Removes default chrome and safari styling */
-    -moz-appearance: textfield; /* Removes default Firefox styling */
-    transition: border 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
-
+    display: block;
     width: 100%;
+    padding: 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1c2333;
+    border: 2px solid #2e3f58;
+    border-radius: 10px;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Style for the up and down buttons on number inputs */
 .controls-container input[type='number']::-webkit-inner-spin-button,
 .controls-container input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none; /* Removes default chrome and safari styling */
+    -webkit-appearance: none;
 }
 
 .controls-container input[type='number']:focus {
-    border-color: #af684c; /* Highlighted border color */
-    box-shadow: 0 0 8px 0 rgba(76, 175, 80, 0.2); /* Adding a subtle shadow on focus */
-    outline: none; /* Removing the default focus outline */
+    border-color: #99005b;
+    box-shadow: 0 0 0 3px rgba(153, 0, 91, 0.25);
+    outline: none;
 }
 
-.number-input input[type='number'] {
-    padding: 0.5rem;
-    font-weight: bold;
+/* Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
 }
 
-a {
-    color: aquamarine;
+.btn {
+    flex: 1;
+    padding: 18px 12px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #ffffff;
+    background: #1c2333;
+    border: 2px solid #2e3f58;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    min-height: 60px;
+}
+
+.btn:active {
+    background: #2e3f58;
+}
+
+.btn-secondary {
+    border-color: #99005b;
+    color: #e07ab0;
+}
+
+.btn-secondary:active {
+    background: rgba(153, 0, 91, 0.2);
 }
