@@ -1,15 +1,22 @@
 import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
 
 const canvas = document.getElementById('myCanvas')
-
-canvas.width = Math.min(window.innerWidth - 32, 560)
-canvas.height = canvas.width
-
 const ctx = canvas.getContext('2d')
 
-const centerX = canvas.width / 2
-const centerY = canvas.height / 2
-const radius = (canvas.width / 2) * 0.8
+let centerX, centerY, radius
+
+function calcCanvasSize() {
+    const size = Math.min(window.innerWidth - 32, 560)
+    canvas.width = size
+    canvas.height = size
+    centerX = size / 2
+    centerY = size / 2
+    radius = (size / 2) * 0.8
+}
+
+calcCanvasSize()
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 // Cached DOM references
 const windInputEl = document.getElementById('windInput')
@@ -255,6 +262,12 @@ function drawAirplane(closest) {
     ctx.restore()
 }
 
+function drawStaticFrame() {
+    setupCanvas(animState.closest)
+    drawAirplane(animState.closest)
+    drawWindLine(animState.windAngle)
+}
+
 function animateFrame() {
     setupCanvas(animState.closest)
     drawParticles()
@@ -271,7 +284,9 @@ function updateWindLine() {
         const closest = findClosest(runways, windAngle)
         animState = { windAngle: parseInt(windAngle, 10), windSpeed: parseFloat(windSpeed), closest }
 
-        if (animFrameId === null) {
+        if (reduceMotion) {
+            drawStaticFrame()
+        } else if (animFrameId === null) {
             initParticles()
             animFrameId = requestAnimationFrame(animateFrame)
         }
@@ -339,6 +354,11 @@ if (localStorage.getItem('runways') === null) {
 
 setupCanvas()
 updateWindLine()
+
+window.addEventListener('resize', () => {
+    calcCanvasSize()
+    updateWindLine()
+})
 
 window.updateWindLine = updateWindLine
 window.reconfigureRunways = reconfigureRunways
