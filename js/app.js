@@ -1,5 +1,6 @@
 const canvas = document.getElementById('myCanvas')
 
+canvas.width = Math.min(window.innerWidth - 32, 560)
 canvas.height = canvas.width
 
 const ctx = canvas.getContext('2d')
