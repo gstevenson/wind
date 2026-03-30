@@ -212,12 +212,13 @@ function drawParticles() {
 function drawAirplane(closest) {
     const headingRad = degreesToRadians(closest, -90)
     // Place on the approach half of the runway, facing the landing direction
-    const planeX = centerX - radius * 0.35 * Math.cos(headingRad)
-    const planeY = centerY - radius * 0.35 * Math.sin(headingRad)
+    const planeX = centerX - radius * 0.52 * Math.cos(headingRad)
+    const planeY = centerY - radius * 0.52 * Math.sin(headingRad)
 
     ctx.save()
     ctx.translate(planeX, planeY)
     ctx.rotate(headingRad + Math.PI / 2)
+    ctx.scale(1.5, 1.5)
     ctx.fillStyle = 'white'
     ctx.shadowColor = 'rgba(220, 240, 255, 0.6)'
     ctx.shadowBlur = 6
