@@ -153,7 +153,7 @@ function calcWind(windAngle, windSpeed, runway) {
 }
 
 function configureLocalStorage() {
-    runways = [20, 200, 140, 320]
+    runways = [90, 270]
     localStorage.setItem('runways', JSON.stringify(runways))
 }
 
