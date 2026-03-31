@@ -68,7 +68,8 @@ function setupCanvas(highlightedRunway = null) {
         ctx.fillText(label, centerX + r * Math.cos(angleRad), centerY + r * Math.sin(angleRad))
     })
 
-    runways.forEach((angle) => drawRunwayLine(angle, angle === highlightedRunway))
+    const recip = highlightedRunway !== null ? (highlightedRunway < 180 ? highlightedRunway + 180 : highlightedRunway - 180) : null
+    runways.forEach((angle) => drawRunwayLine(angle, angle === highlightedRunway || angle === recip, angle === highlightedRunway))
 }
 
 function drawWindLine(angleDegrees) {
@@ -99,7 +100,7 @@ function drawWindLine(angleDegrees) {
     ctx.restore()
 }
 
-function drawRunwayLine(angleDegrees, isHighlighted = false) {
+function drawRunwayLine(angleDegrees, isHighlighted = false, showBadge = isHighlighted) {
     const angleRadians = degreesToRadians(angleDegrees, -270)
     const lineLength = Math.sqrt(2) * radius * 0.5
 
@@ -148,19 +149,19 @@ function drawRunwayLine(angleDegrees, isHighlighted = false) {
     ctx.stroke()
     ctx.setLineDash([])
 
-    const textPadding = isHighlighted ? 28 : 18
+    const textPadding = showBadge ? 28 : 18
     const textX = endX + textPadding * Math.cos(angleRadians - Math.PI / 2)
     const textY = endY + textPadding * Math.sin(angleRadians - Math.PI / 2)
 
-    if (isHighlighted) {
+    if (showBadge) {
         ctx.beginPath()
         ctx.arc(textX, textY, 16, 0, 2 * Math.PI)
         ctx.fillStyle = '#4fc3f7'
         ctx.fill()
     }
 
-    ctx.fillStyle = isHighlighted ? '#0a1520' : '#c8ccd8'
-    ctx.font = isHighlighted ? 'bold 16px Arial' : 'bold 14px Arial'
+    ctx.fillStyle = showBadge ? '#0a1520' : '#c8ccd8'
+    ctx.font = showBadge ? 'bold 16px Arial' : 'bold 14px Arial'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.fillText(angleToRunwayNumber(angleDegrees), textX, textY)
@@ -289,7 +290,9 @@ function updateWindLine() {
         const closest = findClosest(runways, windAngle)
         animState = { windAngle: parseInt(windAngle, 10), windSpeed: parseFloat(windSpeed), closest }
 
-        if (reduceMotion) {
+        if (reduceMotion || parseFloat(windSpeed) === 0) {
+            cancelAnimationFrame(animFrameId)
+            animFrameId = null
             drawStaticFrame()
         } else if (animFrameId === null) {
             initParticles()
