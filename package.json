@@ -17,8 +17,10 @@
     },
     "scripts": {
         "test": "vitest run",
-        "start": "webpack serve --open --config webpack.config.dev.js",
-        "build": "webpack --config webpack.config.prod.js"
+        "prebuild": "node scripts/build-runway-data.js",
+        "build": "webpack --config webpack.config.prod.js",
+        "prestart": "node scripts/build-runway-data.js",
+        "start": "webpack serve --open --config webpack.config.dev.js"
     },
     "devDependencies": {
         "copy-webpack-plugin": "^14.0.0",

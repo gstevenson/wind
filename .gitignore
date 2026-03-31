@@ -42,6 +42,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Generated at build time by scripts/build-runway-data.js
+js/runway-data.json
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
