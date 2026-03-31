@@ -345,16 +345,15 @@ function renderRunwayToggles() {
 }
 
 function toggleRunway(index) {
-    pendingEnabled[index] = !pendingEnabled[index]
+    const next = pendingEnabled.map((v, i) => (i === index ? !v : v))
+    if (!next.some(Boolean)) return  // prevent hiding all runways
+    pendingEnabled = next
     renderRunwayToggles()
 
-    // Immediately reflect the toggle on the canvas
     const active = pendingPairs.flatMap((pair, i) => (pendingEnabled[i] ? pair : []))
-    if (active.length) {
-        runways = parseRunwayInput(active.join(', '))
-        localStorage.setItem('runways', JSON.stringify(runways))
-        updateWindLine()
-    }
+    runways = parseRunwayInput(active.join(', '))
+    localStorage.setItem('runways', JSON.stringify(runways))
+    updateWindLine()
 }
 
 function reconfigureRunways() {
@@ -366,6 +365,7 @@ function reconfigureRunways() {
         pendingPairs.push(numbers.slice(i, i + 2))
         pendingEnabled.push(true)
     }
+    runwayConfigInputEl.value = ''
     runwayConfigErrorEl.hidden = true
     runwayConfigPanelEl.hidden = false
     renderRunwayToggles()
