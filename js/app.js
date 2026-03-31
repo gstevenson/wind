@@ -1,4 +1,5 @@
 import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
+import runwayData from './runway-data.json'
 
 const canvas = document.getElementById('myCanvas')
 const ctx = canvas.getContext('2d')
@@ -27,6 +28,7 @@ const crossWindValueEl = document.getElementById('crossWindValue')
 const runwayConfigPanelEl = document.getElementById('runwayConfig')
 const runwayConfigInputEl = document.getElementById('runwayConfigInput')
 const runwayConfigErrorEl = document.getElementById('runwayConfigError')
+const airportLabelEl = document.getElementById('airportLabel')
 
 let runways = JSON.parse(localStorage.getItem('runways'))
 
@@ -318,32 +320,125 @@ function configureLocalStorage() {
     localStorage.setItem('runways', JSON.stringify(runways))
 }
 
+// pendingPairs holds [["09","27"],["14","32"]] while the config panel is open.
+// Each pair can be toggled on/off before applying.
+let pendingPairs = []
+let pendingEnabled = []
+
+function renderRunwayToggles() {
+    const list = document.getElementById('runwayToggleList')
+    list.innerHTML = ''
+    pendingPairs.forEach((pair, i) => {
+        const label = pair.join('/')
+        const btn = document.createElement('button')
+        btn.type = 'button'
+        btn.className = 'runway-toggle' + (pendingEnabled[i] ? ' enabled' : ' disabled')
+        btn.setAttribute('aria-pressed', String(pendingEnabled[i]))
+        btn.setAttribute('aria-label', `${label} runway — ${pendingEnabled[i] ? 'active, tap to hide' : 'hidden, tap to show'}`)
+        btn.innerHTML = `<span class="runway-toggle-label">${label}</span><i class="fa-solid ${pendingEnabled[i] ? 'fa-eye' : 'fa-eye-slash'}"></i>`
+        btn.onclick = () => window.toggleRunway(i)
+        list.appendChild(btn)
+    })
+}
+
+function toggleRunway(index) {
+    pendingEnabled[index] = !pendingEnabled[index]
+    renderRunwayToggles()
+
+    // Immediately reflect the toggle on the canvas
+    const active = pendingPairs.flatMap((pair, i) => (pendingEnabled[i] ? pair : []))
+    if (active.length) {
+        runways = parseRunwayInput(active.join(', '))
+        localStorage.setItem('runways', JSON.stringify(runways))
+        updateWindLine()
+    }
+}
+
 function reconfigureRunways() {
-    runwayConfigInputEl.value = runways.map((r) => angleToRunwayNumber(r)).join(', ')
+    // Build pairs from current runways so toggles reflect current state
+    const numbers = runways.map((r) => angleToRunwayNumber(r))
+    pendingPairs = []
+    pendingEnabled = []
+    for (let i = 0; i < numbers.length; i += 2) {
+        pendingPairs.push(numbers.slice(i, i + 2))
+        pendingEnabled.push(true)
+    }
     runwayConfigErrorEl.hidden = true
     runwayConfigPanelEl.hidden = false
-    runwayConfigInputEl.focus()
+    renderRunwayToggles()
 }
 
 function applyRunwayConfig() {
-    const parsed = parseRunwayInput(runwayConfigInputEl.value)
-    if (!parsed.length) {
-        runwayConfigErrorEl.textContent = 'Invalid runway numbers — enter e.g. 09, 27'
-        runwayConfigErrorEl.hidden = false
-        return
+    // If toggles are populated, use them; otherwise fall back to manual text input
+    if (pendingPairs.length) {
+        const active = pendingPairs.flatMap((pair, i) => (pendingEnabled[i] ? pair : []))
+        if (!active.length) {
+            runwayConfigErrorEl.textContent = 'At least one runway must be active'
+            runwayConfigErrorEl.hidden = false
+            return
+        }
+        runways = parseRunwayInput(active.join(', '))
+    } else {
+        const parsed = parseRunwayInput(runwayConfigInputEl.value)
+        if (!parsed.length) {
+            runwayConfigErrorEl.textContent = 'Invalid runway numbers — enter e.g. 09, 27'
+            runwayConfigErrorEl.hidden = false
+            return
+        }
+        runways = parsed
     }
-    runways = parsed
     localStorage.setItem('runways', JSON.stringify(runways))
+    localStorage.removeItem('airportName')
+    airportLabelEl.hidden = true
     runwayConfigPanelEl.hidden = true
     updateWindLine()
 }
 
 function closeRunwayConfig() {
     runwayConfigPanelEl.hidden = true
+    pendingPairs = []
+    pendingEnabled = []
+}
+
+function lookupIcao() {
+    const icao = document.getElementById('icaoInput').value.trim().toUpperCase()
+    const errorEl = document.getElementById('icaoError')
+
+    errorEl.hidden = true
+
+    if (icao.length !== 4) {
+        errorEl.textContent = 'Enter a 4-letter ICAO code (e.g. EGCS)'
+        errorEl.hidden = false
+        return
+    }
+
+    const entry = runwayData[icao]
+    if (!entry || !entry.r.length) {
+        errorEl.textContent = 'Airport not found or no runway data available'
+        errorEl.hidden = false
+        return
+    }
+
+    pendingPairs = entry.r.map((pair) => [...pair])
+    pendingEnabled = pendingPairs.map(() => true)
+    renderRunwayToggles()
+
+    // Pre-apply immediately (user can toggle then re-apply if needed)
+    const allNumbers = pendingPairs.flatMap((p) => p)
+    runways = parseRunwayInput(allNumbers.join(', '))
+    localStorage.setItem('runways', JSON.stringify(runways))
+    localStorage.setItem('airportName', `${icao} \u2014 ${entry.n}`)
+    airportLabelEl.textContent = `${icao} \u2014 ${entry.n}`
+    airportLabelEl.hidden = false
+    runwayConfigErrorEl.hidden = true
+    // Keep panel open so user can toggle runways before closing
+    updateWindLine()
 }
 
 function reset() {
     configureLocalStorage()
+    localStorage.removeItem('airportName')
+    airportLabelEl.hidden = true
     updateWindLine()
 }
 
@@ -365,10 +460,20 @@ if (localStorage.getItem('runways') === null) {
     configureLocalStorage()
 }
 
+document.getElementById('icaoInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') lookupIcao()
+})
+
 windInputEl.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp') { e.preventDefault(); adjustWindDirection(10) }
     if (e.key === 'ArrowDown') { e.preventDefault(); adjustWindDirection(-10) }
 })
+
+const savedAirportName = localStorage.getItem('airportName')
+if (savedAirportName) {
+    airportLabelEl.textContent = savedAirportName
+    airportLabelEl.hidden = false
+}
 
 setupCanvas()
 updateWindLine()
@@ -382,6 +487,8 @@ window.updateWindLine = updateWindLine
 window.reconfigureRunways = reconfigureRunways
 window.applyRunwayConfig = applyRunwayConfig
 window.closeRunwayConfig = closeRunwayConfig
+window.lookupIcao = lookupIcao
+window.toggleRunway = toggleRunway
 window.reset = reset
 window.adjustWindDirection = adjustWindDirection
 window.adjustWindSpeed = adjustWindSpeed

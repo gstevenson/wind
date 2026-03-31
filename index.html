@@ -42,6 +42,8 @@
             <canvas id="myCanvas" role="img" aria-label="Wind rose showing runways and current wind direction"> Your browser does not support the canvas element. </canvas>
 
             <div class="controls-container">
+                <p id="airportLabel" hidden></p>
+
                 <label for="windInput">Wind Direction</label>
 
                 <div class="number-input stepper">
@@ -68,7 +70,16 @@
                 </div>
 
                 <div id="runwayConfig" hidden>
-                    <label for="runwayConfigInput">Runway numbers (comma-separated)</label>
+                    <label for="icaoInput">Look up by ICAO code</label>
+                    <div class="icao-lookup">
+                        <input type="text" id="icaoInput" maxlength="4" placeholder="e.g. EGCS" autocomplete="off" oninput="this.value = this.value.toUpperCase()" />
+                        <button class="btn btn-primary" onclick="window.lookupIcao()">Look up</button>
+                    </div>
+                    <p id="icaoError" class="config-error" hidden></p>
+
+                    <div id="runwayToggleList"></div>
+
+                    <label for="runwayConfigInput">Or enter runway numbers manually</label>
                     <input type="text" id="runwayConfigInput" name="runwayConfigInput" inputmode="numeric" placeholder="e.g. 09, 27" />
                     <p id="runwayConfigError" class="config-error" hidden></p>
                     <div class="action-buttons">

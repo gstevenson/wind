@@ -354,6 +354,66 @@ label {
     outline: none;
 }
 
+/* Airport name label */
+#airportLabel {
+    margin: 0 0 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #67c6e3;
+    letter-spacing: 0.03em;
+}
+
+/* Runway toggle list */
+#runwayToggleList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.runway-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #0e1117;
+    border: 2px solid #2e3f58;
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.15s, opacity 0.15s;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.runway-toggle.enabled {
+    border-color: #4fc3f7;
+    color: #ffffff;
+}
+
+.runway-toggle.disabled {
+    border-color: #2e3f58;
+    color: #4a5568;
+    background: #0a0d13;
+}
+
+.runway-toggle i {
+    font-size: 1.1rem;
+    color: #8a9bb5;
+}
+
+.runway-toggle.enabled i {
+    color: #4fc3f7;
+}
+
+.runway-toggle:focus-visible {
+    outline: 3px solid #4fc3f7;
+    outline-offset: 2px;
+}
+
 /* Runway config panel */
 #runwayConfig {
     margin-top: 16px;
@@ -392,6 +452,37 @@ label {
     margin: 8px 0 0;
     font-size: 0.85rem;
     color: #f87171;
+}
+
+.icao-lookup {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.icao-lookup input {
+    flex: 1;
+    padding: 14px 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: #0e1117;
+    border: 2px solid #2e3f58;
+    border-radius: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.icao-lookup input:focus {
+    border-color: #99005b;
+    box-shadow: 0 0 0 3px rgba(153, 0, 91, 0.25);
+    outline: none;
+}
+
+.config-status {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    color: #67c6e3;
 }
 
 .btn-primary {
