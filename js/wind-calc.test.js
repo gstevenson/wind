@@ -32,6 +32,13 @@ describe('findClosest', () => {
         expect(findClosest(runways, 130)).toBe(140)
     })
 
+    it('wraps correctly near 0/360 boundary', () => {
+        // Wind 20°, runways 140 and 320: circular distance to 320 is 60°, to 140 is 120°
+        expect(findClosest([140, 320], 20)).toBe(320)
+        // Wind 350°, runways 140 and 320: circular distance to 320 is 30°, to 140 is 150°
+        expect(findClosest([140, 320], 350)).toBe(320)
+    })
+
     it('returns exact match when wind aligns with a runway', () => {
         expect(findClosest(runways, 20)).toBe(20)
         expect(findClosest(runways, 140)).toBe(140)

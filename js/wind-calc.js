@@ -17,7 +17,11 @@ export function parseRunwayInput(input) {
 }
 
 export function findClosest(runways, value) {
-    return runways.reduce((closest, current) => (Math.abs(current - value) < Math.abs(closest - value) ? current : closest))
+    const angularDist = (a, b) => {
+        const diff = Math.abs(a - b) % 360
+        return diff > 180 ? 360 - diff : diff
+    }
+    return runways.reduce((closest, current) => (angularDist(current, value) < angularDist(closest, value) ? current : closest))
 }
 
 export function calcWindComponents(windAngle, windSpeed, runway) {
