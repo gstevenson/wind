@@ -427,9 +427,10 @@ label {
     margin-top: 0;
 }
 
-#runwayConfig input[type='text'] {
+#runwayConfigInput {
     display: block;
     width: 100%;
+    box-sizing: border-box;
     padding: 14px 16px;
     margin-top: 4px;
     font-family: 'Roboto', sans-serif;
@@ -442,7 +443,7 @@ label {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-#runwayConfig input[type='text']:focus {
+#runwayConfigInput:focus {
     border-color: #99005b;
     box-shadow: 0 0 0 3px rgba(153, 0, 91, 0.25);
     outline: none;
