@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
+import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
 
 describe('angleToRunwayNumber', () => {
     it('converts cardinal headings', () => {
@@ -100,5 +100,101 @@ describe('parseRunwayInput', () => {
 
     it('handles multiple runways with mixed spacing', () => {
         expect(parseRunwayInput('09, 27, 14,32')).toEqual([90, 270, 140, 320])
+    })
+})
+
+describe('degreesToRadians', () => {
+    it('converts 0 degrees to 0 radians', () => {
+        expect(degreesToRadians(0)).toBeCloseTo(0)
+    })
+
+    it('converts 180 degrees to PI radians', () => {
+        expect(degreesToRadians(180)).toBeCloseTo(Math.PI)
+    })
+
+    it('converts 360 degrees to 2*PI radians', () => {
+        expect(degreesToRadians(360)).toBeCloseTo(2 * Math.PI)
+    })
+
+    it('applies offset before converting', () => {
+        expect(degreesToRadians(0, 90)).toBeCloseTo(Math.PI / 2)
+        expect(degreesToRadians(90, -90)).toBeCloseTo(0)
+    })
+})
+
+describe('parseRunwayInput — validation', () => {
+    it('filters out non-numeric entries', () => {
+        expect(parseRunwayInput('09, abc, 27')).toEqual([90, 270])
+    })
+
+    it('returns empty array for all-invalid input', () => {
+        expect(parseRunwayInput('foo, bar')).toEqual([])
+    })
+
+    it('filters out-of-range runway numbers', () => {
+        expect(parseRunwayInput('09, 37, 27')).toEqual([90, 270])
+        expect(parseRunwayInput('0, 09')).toEqual([90])
+    })
+
+    it('returns empty array for empty string', () => {
+        expect(parseRunwayInput('')).toEqual([])
+    })
+
+    it('handles a single runway', () => {
+        expect(parseRunwayInput('18')).toEqual([180])
+    })
+})
+
+describe('findClosest — edge cases', () => {
+    it('works with a single-element array', () => {
+        expect(findClosest([90], 270)).toBe(90)
+    })
+
+    it('treats 0 and 360 as equivalent wind directions', () => {
+        const runways = [20, 200, 140, 320]
+        expect(findClosest(runways, 0)).toBe(findClosest(runways, 360))
+    })
+
+    it('returns first match when two runways are equidistant', () => {
+        // Wind 90°, runways [0, 180] — both 90° away, first one wins via reduce
+        expect(findClosest([0, 180], 90)).toBe(0)
+    })
+})
+
+describe('calcWindComponents — edge cases', () => {
+    it('returns zero components when wind speed is zero', () => {
+        const { headTailComponent, crosswindComponent } = calcWindComponents(45, 0, 360)
+        expect(headTailComponent).toBe(0)
+        expect(crosswindComponent).toBe(0)
+    })
+
+    it('handles quartering wind (45 degrees off runway)', () => {
+        const { headTailComponent, crosswindComponent } = calcWindComponents(45, 20, 360)
+        const expected = 20 * Math.cos(Math.PI / 4)
+        expect(headTailComponent).toBeCloseTo(expected, 1)
+        expect(crosswindComponent).toBeCloseTo(expected, 1)
+    })
+
+    it('treats wind 0 and runway 360 as aligned', () => {
+        const { headTailComponent, crosswindComponent, isHeadwind } = calcWindComponents(0, 15, 360)
+        expect(headTailComponent).toBeCloseTo(15, 1)
+        expect(crosswindComponent).toBeCloseTo(0, 1)
+        expect(isHeadwind).toBe(true)
+    })
+})
+
+describe('integration: best runway has lowest crosswind', () => {
+    it('findClosest picks the runway with minimum crosswind', () => {
+        const runways = [90, 270, 140, 320]
+        const windAngle = 150
+        const windSpeed = 20
+
+        const best = findClosest(runways, windAngle)
+        const bestCrosswind = calcWindComponents(windAngle, windSpeed, best).crosswindComponent
+
+        for (const rwy of runways) {
+            const { crosswindComponent } = calcWindComponents(windAngle, windSpeed, rwy)
+            expect(bestCrosswind).toBeLessThanOrEqual(crosswindComponent + 0.01)
+        }
     })
 })
