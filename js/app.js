@@ -1,5 +1,4 @@
 import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
-import runwayData from './runway-data.json'
 
 const canvas = document.getElementById('myCanvas')
 const ctx = canvas.getContext('2d')
@@ -408,7 +407,7 @@ function closeRunwayConfig() {
     pendingEnabled = []
 }
 
-function lookupIcao() {
+async function lookupIcao() {
     const icao = document.getElementById('icaoInput').value.trim().toUpperCase()
     const errorEl = document.getElementById('icaoError')
 
@@ -420,6 +419,7 @@ function lookupIcao() {
         return
     }
 
+    const runwayData = (await import('./runway-data.json')).default
     const entry = runwayData[icao]
     if (!entry || !entry.r.length) {
         errorEl.textContent = 'Airport not found or no runway data available'
