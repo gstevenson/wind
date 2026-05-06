@@ -1,4 +1,5 @@
 import { degreesToRadians, angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput } from './wind-calc.js'
+import { fetchMetar, parseMetarWind } from './metar.js'
 
 const canvas = document.getElementById('myCanvas')
 const ctx = canvas.getContext('2d')
@@ -441,12 +442,30 @@ async function lookupIcao() {
     runwayConfigErrorEl.hidden = true
     // Keep panel open so user can toggle runways before closing
     updateWindLine()
+
+    const metarDisplayEl = document.getElementById('metarDisplay')
+    const metarTextEl = document.getElementById('metarText')
+
+    try {
+        const metar = await fetchMetar(icao)
+        metarTextEl.textContent = metar
+        metarDisplayEl.hidden = false
+        const wind = parseMetarWind(metar)
+        if (wind && !wind.variable) {
+            windInputEl.value = wind.direction
+            windSpeedEl.value = wind.speed
+            updateWindLine()
+        }
+    } catch (e) {
+        metarDisplayEl.hidden = true
+    }
 }
 
 function reset() {
     configureLocalStorage()
     localStorage.removeItem('airportName')
     airportLabelEl.hidden = true
+    document.getElementById('metarDisplay').hidden = true
     updateWindLine()
 }
 

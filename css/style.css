@@ -580,3 +580,16 @@ label {
 .btn-secondary:active {
     background: rgba(153, 0, 91, 0.2);
 }
+
+.metar-raw {
+    font-family: monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+.metar-warning {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #ff9800;
+    margin-top: 0.25rem;
+}
