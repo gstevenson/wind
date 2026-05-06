@@ -224,44 +224,49 @@ function drawParticles() {
 
 function drawAirplane(closest) {
     const headingRad = degreesToRadians(closest, -90)
-    // Place on the approach half of the runway, facing the landing direction
     const planeX = centerX - radius * 0.52 * Math.cos(headingRad)
     const planeY = centerY - radius * 0.52 * Math.sin(headingRad)
 
     ctx.save()
     ctx.translate(planeX, planeY)
     ctx.rotate(headingRad + Math.PI / 2)
-    ctx.scale(1.5, 1.5)
+    ctx.scale(1.6, 1.6)
     ctx.fillStyle = 'white'
     ctx.shadowColor = 'rgba(220, 240, 255, 0.6)'
     ctx.shadowBlur = 6
 
-    // Fuselage
     ctx.beginPath()
-    ctx.moveTo(0, -12)
-    ctx.lineTo(2.5, -6)
-    ctx.lineTo(2, 6)
-    ctx.lineTo(4, 11)    // tail fin right
-    ctx.lineTo(0, 9)
-    ctx.lineTo(-4, 11)   // tail fin left
-    ctx.lineTo(-2, 6)
-    ctx.lineTo(-2.5, -6)
-    ctx.closePath()
-    ctx.fill()
-
-    // Left wing
-    ctx.beginPath()
-    ctx.moveTo(-2.5, -3)
-    ctx.lineTo(-13, 3)
-    ctx.lineTo(-2, 5)
-    ctx.closePath()
-    ctx.fill()
-
+    // Nose
+    ctx.moveTo(0, -14)
+    ctx.quadraticCurveTo(2, -11, 2, -8)
+    // Right fuselage to wing root
+    ctx.lineTo(2, -2)
     // Right wing
-    ctx.beginPath()
-    ctx.moveTo(2.5, -3)
-    ctx.lineTo(13, 3)
-    ctx.lineTo(2, 5)
+    ctx.lineTo(14, 2)
+    ctx.lineTo(14, 4)
+    ctx.lineTo(2, 3)
+    // Right fuselage aft
+    ctx.lineTo(1.8, 9)
+    // Right tailplane
+    ctx.lineTo(6, 11)
+    ctx.lineTo(6, 12.5)
+    ctx.lineTo(1.5, 11)
+    // Tail
+    ctx.lineTo(0, 12)
+    // Left tailplane
+    ctx.lineTo(-1.5, 11)
+    ctx.lineTo(-6, 12.5)
+    ctx.lineTo(-6, 11)
+    ctx.lineTo(-1.8, 9)
+    // Left fuselage aft
+    ctx.lineTo(-2, 3)
+    // Left wing
+    ctx.lineTo(-14, 4)
+    ctx.lineTo(-14, 2)
+    ctx.lineTo(-2, -2)
+    // Left fuselage to nose
+    ctx.lineTo(-2, -8)
+    ctx.quadraticCurveTo(-2, -11, 0, -14)
     ctx.closePath()
     ctx.fill()
 
