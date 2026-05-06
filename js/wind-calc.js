@@ -9,6 +9,9 @@ export function angleToRunwayNumber(angleDegrees) {
     if (runwayNumber >= 100) {
         runwayNumber = runwayNumber % 100
     }
+    if (runwayNumber === 0) {
+        runwayNumber = 36
+    }
     return runwayNumber.toString().padStart(2, '0')
 }
 

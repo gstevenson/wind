@@ -3,7 +3,7 @@ import { angleToRunwayNumber, findClosest, calcWindComponents, parseRunwayInput 
 
 describe('angleToRunwayNumber', () => {
     it('converts cardinal headings', () => {
-        expect(angleToRunwayNumber(0)).toBe('00')
+        expect(angleToRunwayNumber(0)).toBe('36')
         expect(angleToRunwayNumber(90)).toBe('09')
         expect(angleToRunwayNumber(180)).toBe('18')
         expect(angleToRunwayNumber(270)).toBe('27')
