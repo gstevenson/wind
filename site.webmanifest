@@ -1,6 +1,6 @@
 {
-    "short_name": "",
-    "name": "",
+    "short_name": "Wind Calc",
+    "name": "Runway Wind Calculator",
     "icons": [
         {
             "src": "icon.png",
@@ -8,7 +8,8 @@
             "sizes": "192x192"
         }
     ],
-    "start_url": "https://gstevenson.github.io/wind/",
-    "background_color": "#fafafa",
-    "theme_color": "#fafafa"
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#0a1520",
+    "theme_color": "#0a1520"
 }
